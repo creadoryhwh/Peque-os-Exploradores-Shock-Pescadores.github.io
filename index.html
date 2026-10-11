@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Pequeños Exploradores Shock - Pescadores de Hombres | Shock 99.5 FM & Theos Logos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            user-select: none;
+            min-height: 100vh;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        #sea-canvas, #strike-lightning-canvas, #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none !important;
+        }
+
+        #sea-canvas { z-index: 0; }
+        #particle-canvas { z-index: 35; }
+        #strike-lightning-canvas { z-index: 40; }
+
+        .glass-card {
+            background: rgba(10, 15, 30, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.9), 0 0 30px rgba(14, 165, 233, 0.25);
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.6) 100%);
+            border: 1.5px solid rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .level-btn.completed {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            border-color: #34d399;
+            color: #ffffff;
+            box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+        }
+        .level-btn.current {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-color: #60a5fa;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(96, 165, 250, 0.9);
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        .level-btn.locked {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(100, 116, 139, 0.2);
+            color: rgba(100, 116, 139, 0.4);
+            cursor: not-allowed;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .flash-screen {
+            animation: flashAnim 0.3s ease-out;
+        }
+
+        @keyframes flashAnim {
+            0% { background-color: rgba(56, 189, 248, 0.85); }
+            100% { background-color: transparent; }
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-blue-500 selection:text-white">
+
+    <!-- 1. PANTALLA DE NARRATIVA PROFUNDA INICIAL -->
+    <div id="narrative-overlay" class="fixed inset-0 bg-black/98 z-50 flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+        <div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-8 border-2 border-sky-500/80 shadow-[0_0_60px_rgba(14,165,233,0.4)] flex flex-col items-center">
+            
+            <div id="narrative-logo-container" class="h-16 mb-4 flex items-center justify-center">
+                <img src="shock.png" alt="Shock 99.5 FM" class="h-16 object-contain drop-shadow-[0_0_15px_rgba(14,165,233,0.8)]" onError="renderFallbackShockLogo('narrative-logo-container', 64);">
+            </div>
+
+            <h1 class="font-cinzel text-lg sm:text-2xl font-bold text-sky-300 mb-2">El Llamado a las Orillas del Mar</h1>
+            <p class="text-xs sm:text-xs font-semibold text-blue-400 mb-4 uppercase tracking-widest">Mateo 4:18-20 • La Misión de Evangelizar</p>
+
+            <div class="bg-blue-950/50 p-4 sm:p-5 rounded-2xl border border-blue-500/30 mb-6 text-left max-h-[220px] sm:max-h-[260px] overflow-y-auto space-y-3">
+                <p id="narrative-text-1" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
+                    A la orilla del apacible mar de Galilea, la vida transcurría entre redes gastadas por el salitre y el esfuerzo diario de hombres dedicados a la pesca. Entre ellos estaban Simón, a quien llamaban Pedro, y su hermano Andrés. Sus manos conocían el oficio del mar, pero sus corazones estaban siendo preparados para un propósito eterno.
+                </p>
+                <p id="narrative-text-2" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
+                    Cuando Jesús pasó por la orilla y les miró a los ojos, no solo les ofreció una barca diferente; les hizo una promesa que cambiaría la historia: "Venid en pos de mí, y os haré pescadores de hombres". En aquel instante, dejando las redes atrás, comenzó la más grande misión de evangelización jamás encomendada.
+                </p>
+                <p id="narrative-text-3" class="text-xs sm:text-sm text-sky-200 font-semibold leading-relaxed border-t border-blue-500/30 pt-3">
+                    Hoy, este llamado resuena con la misma fuerza para ti y para toda la Iglesia de Cristo. La barca está lista, los campos están listos para la cosecha y el mundo necesita escuchar las buenas nuevas de salvación. ¡Levantemos nuestra voz con pasión, seamos audaces en el evangelismo y cumplamos la gran comisión que nuestro Maestro nos encomendó!
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 w-full">
+                <button onclick="triggerNarrativeVoice()" class="flex-1 py-3 px-4 rounded-xl bg-blue-900/60 border border-blue-500/40 text-sky-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-volume-high text-sky-400"></i> Escuchar Narración
+                </button>
+                <button id="start-mission-btn" onclick="startMainGameFromNarrative()" disabled class="flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i> Esperando Narración...
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CANVASES DE EFECTOS -->
+    <canvas id="sea-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+    <canvas id="strike-lightning-canvas"></canvas>
+
+    <!-- APP CONTAINER -->
+    <div class="relative z-10 min-h-screen flex flex-col justify-between">
+
+        <!-- HEADER -->
+        <header class="w-full bg-black/90 border-b border-blue-900/50 backdrop-blur-md p-2.5 sm:p-4 sticky top-0 z-30 shadow-2xl">
+            <div class="max-w-5xl mx-auto flex flex-row justify-between items-center gap-2">
+                
+                <div id="header-logo-container" class="flex items-center gap-2 h-9 sm:h-14">
+                    <img src="shock.png" alt="Shock 99.5 FM" class="h-9 sm:h-14 object-contain drop-shadow-[0_0_12px_rgba(14,165,233,0.8)]" onError="renderFallbackShockLogo('header-logo-container', 48);">
+                </div>
+
+                <!-- HUD PUNTOS, ICONO GRAN COMISION Y AUDIO -->
+                <div class="flex items-center gap-1.5 sm:gap-3 bg-stone-900/90 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-blue-500/40">
+                    
+                    <!-- BOTÓN ICONO DE LA GRAN COMISIÓN PARA ABRIR NARRATIVA -->
+                    <button onclick="openNarrativeModal()" class="text-yellow-400 hover:text-yellow-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2.5 sm:px-3 py-1 rounded-lg border border-amber-600/40" title="La Gran Comisión y Reseña">
+                        <i class="fa-solid fa-earth-americas text-yellow-300 text-xs sm:text-sm animate-pulse"></i>
+                        <span class="hidden md:inline">Gran Comisión</span>
+                    </button>
+
+                    <button id="tts-toggle" onclick="toggleAudio()" class="text-sky-400 hover:text-sky-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-blue-950/60 px-2 sm:px-3 py-1 rounded-lg border border-blue-600/40">
+                        <i id="tts-icon" class="fa-solid fa-volume-high text-xs"></i>
+                        <span id="tts-status" class="hidden sm:inline">Voz ON</span>
+                    </button>
+
+                    <button onclick="confirmReset()" class="text-[11px] sm:text-xs font-bold text-red-400 hover:text-red-300 bg-red-950/60 px-2 sm:px-3 py-1 rounded-lg border border-red-700/40 transition flex items-center gap-1">
+                        <i class="fa-solid fa-trash-can"></i> <span class="hidden sm:inline">Reiniciar</span>
+                    </button>
+
+                    <div class="flex items-center gap-1.5 text-sky-400 font-bold border-l border-blue-500/30 pl-2 sm:pl-3">
+                        <i class="fa-solid fa-fish text-sky-300 text-sm sm:text-lg drop-shadow-[0_0_10px_rgba(56,189,248,0.9)]"></i>
+                        <div class="flex flex-col text-left">
+                            <span class="text-[8px] sm:text-[9px] uppercase tracking-wider text-sky-200/70 font-semibold leading-none">NIVELES</span>
+                            <span id="star-score-hud" class="font-black text-xs sm:text-base leading-none text-sky-300">0 / 40</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- MAIN AREA -->
+        <main class="flex-grow max-w-5xl w-full mx-auto p-2.5 sm:p-6 my-1 sm:my-2 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+            
+            <!-- PANEL DE NIVELES (40 NIVELES) -->
+            <section class="lg:col-span-5 glass-card rounded-2xl sm:rounded-3xl p-3 sm:p-5 border border-blue-500/40 order-2 lg:order-1">
+                <div class="flex justify-between items-center mb-2 sm:mb-3 pb-1.5 border-b border-blue-500/20">
+                    <h3 class="font-cinzel text-blue-300 font-bold text-xs sm:text-sm uppercase flex items-center gap-1.5">
+                        <i class="fa-solid fa-anchor text-blue-400"></i> Ruta de Pescadores (40)
+                    </h3>
+                    <span id="progress-percent" class="text-xs font-bold text-blue-400">0%</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 max-h-[340px] sm:max-h-[440px] overflow-y-auto pr-1" id="levels-grid-container"></div>
+            </section>
+
+            <!-- TARJETA DE PREGUNTA / MISION -->
+            <section class="lg:col-span-7 glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-7 relative border border-blue-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] order-1 lg:order-2">
+                
+                <div class="flex flex-row justify-between items-center gap-2 mb-3 pb-2 border-b border-blue-500/20">
+                    <span id="mission-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40 flex items-center gap-1.5">
+                        <i class="fa-solid fa-compass text-blue-400"></i> Mateo 4:18-20
+                    </span>
+                    
+                    <div class="text-right">
+                        <span id="level-indicator" class="text-[11px] sm:text-xs font-extrabold text-blue-300 uppercase tracking-wider block">
+                            Nivel 1 de 40
+                        </span>
+                        <span id="group-indicator" class="text-[10px] sm:text-[11px] text-blue-200/70 font-semibold italic block">
+                            El Llamado al Mar de Galilea
+                        </span>
+                    </div>
+                </div>
+
+                <!-- BARRA DE PROGRESO -->
+                <div class="w-full bg-stone-950/80 rounded-full h-2.5 sm:h-3 border border-blue-500/30 overflow-hidden mb-4">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-blue-500 transition-all duration-500 rounded-full" style="width: 1%"></div>
+                </div>
+
+                <!-- PREGUNTA -->
+                <h2 id="question-text" class="text-sm sm:text-xl font-bold text-sky-100 mb-3 sm:mb-4 leading-relaxed font-cinzel text-center min-h-[50px] sm:min-h-[70px] flex items-center justify-center">
+                    Cargando misión...
+                </h2>
+
+                <div class="flex justify-center mb-3">
+                    <button onclick="readCurrentQuestion()" class="text-[11px] sm:text-xs text-sky-300/80 hover:text-sky-200 bg-blue-900/30 px-3 py-1 rounded-full border border-blue-700/40 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-play text-sky-400"></i> Escuchar Pregunta
+                    </button>
+                </div>
+
+                <!-- OPCIONES -->
+                <div id="options-container" class="space-y-2 sm:space-y-3 mb-3 sm:mb-5"></div>
+
+                <!-- RETROALIMENTACION BIBLICA Y CONTROL DE AVANCE -->
+                <div id="feedback-box" class="hidden rounded-xl p-3 sm:p-4 text-center border backdrop-blur-md transition-all"></div>
+
+                <div class="mt-3 text-center">
+                    <p class="text-[10px] sm:text-[11px] text-sky-200/60 flex items-center justify-center gap-1 italic">
+                        <i class="fa-solid fa-bolt text-yellow-400"></i> ¡Responde bien para desatar Rayos Shock directos! ⚡
+                    </p>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="w-full text-center py-2.5 bg-black/90 border-t border-blue-950 text-blue-200/50 text-[10px] sm:text-xs z-10">
+            Pescadores de Hombres &copy; Shock 99.5 FM — Producido para <span class="text-yellow-400 font-bold">Theos Logos</span>
+        </footer>
+
+    </div>
+
+    <!-- MODAL TROFEO FINAL -->
+    <div id="trophy-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
+        <div class="max-w-md w-full glass-card rounded-3xl p-5 sm:p-8 text-center border-2 border-yellow-400/80 shadow-[0_0_80px_rgba(255,215,0,0.6)] relative overflow-hidden">
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="inline-block p-3 sm:p-4 rounded-full bg-yellow-500/10 border-2 border-yellow-400/50 mb-2 animate-bounce">
+                    <i class="fa-solid fa-trophy text-4xl sm:text-5xl text-yellow-400"></i>
+                </div>
+
+                <h3 class="text-amber-200 text-[10px] sm:text-xs uppercase font-extrabold tracking-widest mb-1">¡GRAN COMISIÓN CUMPLIDA!</h3>
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 font-cinzel">Pescador de Hombres Fiel</h2>
+
+                <div id="trophy-logo-container" class="my-3 p-3 w-full rounded-2xl bg-black/80 border border-yellow-500/40 flex items-center justify-center min-h-[90px]">
+                    <img src="theos.png" alt="Theos Logos" class="max-h-20 sm:max-h-28 object-contain" onError="renderFallbackTheosLogo('trophy-logo-container');">
+                </div>
+
+                <p class="text-stone-300 text-xs sm:text-sm mb-4 leading-relaxed">
+                    ¡Has completado los 40 niveles compartiendo el evangelio tal como Jesús comisionó a sus discípulos!
+                </p>
+
+                <div class="w-full space-y-2">
+                    <button onclick="resetAndPlayAgain()" class="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg">
+                        <i class="fa-solid fa-rotate-right mr-1.5"></i> Volver a Jugar
+                    </button>
+                    <button onclick="closeTrophyModal()" class="w-full py-2.5 px-5 rounded-xl bg-stone-900 text-sky-300 font-bold text-xs border border-blue-500/30">
+                        <i class="fa-solid fa-eye mr-1.5"></i> Ver Ruta de Misión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script>
+        function renderFallbackShockLogo(containerId, height = 48) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `
+                <div class="flex items-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-blue-600 px-3 py-1.5 rounded-xl border border-sky-400/60 shadow-[0_0_15px_rgba(14,165,233,0.7)]">
+                    <i class="fa-solid fa-bolt text-yellow-300 text-lg animate-pulse"></i>
+                    <div class="flex flex-col text-left leading-none">
+                        <span class="font-black italic text-white text-sm">SHOCK</span>
+                        <span class="font-bold text-yellow-300 text-[9px]">99.5 FM</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFallbackTheosLogo(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-1">
+                    <i class="fa-solid fa-book-open-reader text-yellow-400 text-2xl mb-1"></i>
+                    <span class="font-cinzel font-black text-yellow-300 text-lg">THEOS LOGOS</span>
+                </div>
+            `;
+        }
+
+        // 40 PREGUNTAS ÚNICAS BASADAS EN MATEO 4:18-20 Y LA GRAN COMISIÓN
+        const questionsDB = [
+            { question: "1. ¿Junto a qué mar caminaba Jesús cuando vio a dos hermanos, Simón llamado Pedro y Andrés?", options: ["Mar Muerto", "Mar de Galilea", "Mar Rojo", "Mar Mediterráneo"], correct: 1, verse: "Mateo 4:18", verseText: "Andando Jesús junto al mar de Galilea, vio a dos hermanos, Simón, llamado Pedro, y Andrés su hermano, que echaban la red en el mar; porque eran pescadores." },
+            { question: "2. ¿Qué oficio tenían Simón Pedro y Andrés antes de ser llamados por Jesús?", options: ["Carpinteros", "Pescadores", "Agricultores", "Pastores"], correct: 1, verse: "Mateo 4:18", verseText: "...que echaban la red en el mar; porque eran pescadores." },
+            { question: "3. ¿Qué les dijo Jesús a Pedro y Andrés al llamarlos a seguirle?", options: ["Venid en pos de mí, y os haré pescadores de hombres", "Dejad vuestras redes y construyan casas", "Vended todo lo que tenéis y viajen lejos", "Preparen el barco para pescar más peces"], correct: 0, verse: "Mateo 4:19", verseText: "Y les dijo: Venid en pos de mí, y os haré pescadores de hombres." },
+            { question: "4. ¿Qué hicieron instantáneamente Pedro y Andrés al escuchar el llamado de Jesús?", options: ["Esperaron al día siguiente", "Dejaron al instante las redes y le siguieron", "Le pidieron más tiempo", "Preguntaron a sus padres"], correct: 1, verse: "Mateo 4:20", verseText: "Ellos entonces, dejando al instante las redes, le siguieron." },
+            { question: "5. ¿Cuál es la Gran Comisión que Jesús dio a sus discípulos antes de partir?", options: ["Quedarse en Jerusalén tranquilos", "Id por todo el mundo y predicad el evangelio a toda criatura", "Construir templos grandes", "Estudiar la ley antigua"], correct: 1, verse: "Marcos 16:15", verseText: "Y les dijo: Id por todo el mundo y predicad el evangelio a toda criatura." },
+            { question: "6. Según Mateo 28:19, ¿qué debemos hacer con todas las naciones?", options: ["Enseñarles ciencias", "Hacer discípulos bautizándolos en el nombre del Padre, del Hijo y del Espíritu Santo", "Conquistar sus tierras", "Cobrar tributos"], correct: 1, verse: "Mateo 28:19", verseText: "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo." },
+            { question: "7. ¿Quiénes eran los otros dos hermanos pescadores que Jesús llamó inmediatamente después en la barca?", options: ["Jacobo y Juan, hijos de Zebedeo", "Felipe y Bartolomé", "Tomás y Mateo", "Santiago y Judas"], correct: 0, verse: "Mateo 4:21", verseText: "Pasando de allí, vio a otros dos hermanos, Jacobo hijo de Zebedeo, y Juan su hermano, en la barca con Zebedeo su padre, remendando sus redes; y los llamó." },
+            { question: "8. ¿Qué promesa dio Jesús a sus discípulos al encomendarles la gran comisión en Mateo 28:20?", options: ["Tendrán riquezas materiales", "He aquí yo estoy con vosotros todos los días, hasta el fin del mundo", "Nadie se opondrá a su mensaje", "Nunca experimentarán cansancio"], correct: 1, verse: "Mateo 28:20", verseText: "Enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo." },
+            { question: "9. ¿Qué poder prometió Jesús que recibirían los discípulos al descender el Espíritu Santo para ser testigos?", options: ["Poder político", "Poder para hacer milagros egoístas", "Recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo", "Poder para gobernar imperios"], correct: 2, verse: "Hechos 1:8", verseText: "Pero recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo, y me seréis testigos en Jerusalén, en toda Judea, en Samaria, y hasta lo último de la tierra." },
+            { question: "10. ¿Cómo demostró Pedro su valentía al predicar el día de Pentecostés?", options: ["Huyendo de la multitud", "Predicando con denuedo el evangelio de salvación donde se convirtieron miles", "Permaneciendo en silencio", "Cerrando el templo"], correct: 1, verse: "Hechos 2:41", verseText: "Así que, los que recibieron su palabra fueron bautizados; y se añadieron aquel día como tres mil personas." },
+            { question: "11. ¿Qué herramienta espiritual menciona Efesios que es la espada del Espíritu?", options: ["Una espada de hierro", "La Palabra de Dios", "Los decretos humanos", "La elocuencia"], correct: 1, verse: "Efesios 6:17", verseText: "Y tomad el yelmo de la salvación, y la espada del Espíritu, que es la palabra de Dios." },
+            { question: "12. ¿Qué representa la red de los pescadores en la misión que Jesús dio?", options: ["Una trampa peligrosa", "El alcance del evangelio para rescatar almas para el Reino de los Cielos", "Un instrumento de pesca ordinario", "Una cerca de seguridad"], correct: 1, verse: "Mateo 13:47", verseText: "Asimismo el reino de los cielos es semejante a una red, que echada en el mar, atrapa toda clase de peces." },
+            { question: "13. ¿Cuál debe ser nuestra actitud al compartir las buenas nuevas de salvación?", options: ["Vergüenza", "Temor al qué dirán", "Id con gozo y valentía predicando la paz", "Imponer por la fuerza"], correct: 2, verse: "Romanos 10:15", verseText: "¿Y cómo predicarán si no fueren enviados? Como está escrito: ¡Qué hermosos son los pies de los que anuncian la paz, de los que anuncian buenas nuevas!" },
+            { question: "14. ¿Qué dijo Pedro ante las autoridades cuando le prohibieron hablar de Jesús?", options: ["Es mejor obedecer a Dios antes que a los hombres", "Dejaré de predicar", "Hacer silencio por prudencia", "Escapar de la ciudad"], correct: 0, verse: "Hechos 5:29", verseText: "Respondiendo Pedro y los apóstoles, dijeron: Es necesario obedecer a Dios antes que a los hombres." },
+            { question: "15. ¿Qué significa ser sal de la tierra y luz del mundo según Jesús?", options: ["Iluminar casas y salar comidas", "Reflejar el amor de Dios e influenciar al mundo con principios del evangelio", "Vivir apartados de la sociedad", "Ocultar la fe en público"], correct: 1, verse: "Mateo 5:14", verseText: "Vosotros sois la luz del mundo; una ciudad asentada sobre un monte no se puede esconder." },
+            { question: "16. ¿Qué libro de la Biblia detalla el inicio de la misión de evangelizar el mundo por los apóstoles?", options: ["Génesis", "Hechos de los Apóstoles", "Apocalipsis", "Levítico"], correct: 1, verse: "Hechos 1:1", verseText: "El primer tratado, oh Teófilo, hube hecho acerca de todas las cosas que Jesús comenzó a hacer y a enseñar..." },
+            { question: "17. ¿A qué nos invita Romanos 1:16 respecto al evangelio de Cristo?", options: ["A avergonzarnos de él", "A no avergonzarnos, porque es poder de Dios para salvación", "A guardarlo en secreto", "A predicarlo solo a familiares"], correct: 1, verse: "Romanos 1:16", verseText: "Porque no me avergüenzo del evangelio, porque es poder de Dios para salvación a todo aquel que cree..." },
+            { question: "18. ¿Qué hizo Andrés inmediatamente después de encontrar al Mesías?", options: ["Se fue a dormir", "Buscó a su hermano Simón Pedro y le llevó a Jesús", "Guardó el secreto", "Vendió sus redes"], correct: 1, verse: "Juan 1:41", verseText: "Este halló primero a su hermano Simón, y le dijo: Hemos hallado al Mesías (que traducido es el Cristo)." },
+            { question: "19. ¿Cuál es el propósito principal por el cual brillan nuestras luces delante de los hombres?", options: ["Para recibir aplausos", "Para que vean nuestras buenas obras y glorifiquen a vuestro Padre que está en los cielos", "Para demostrar superioridad", "Para destacar en la comunidad"], correct: 1, verse: "Mateo 5:16", verseText: "Así alumbre vuestra luz delante de los hombres, para que vean vuestras buenas obras, y glorifiquen a vuestro Padre que está en los cielos." },
+            { question: "20. ¿Qué representa el mar en la metáfora de Pescadores de Hombres?", options: ["El mundo lleno de personas que necesitan escuchar el mensaje de salvación", "Un obstáculo intransitable", "Un lugar prohibido", "Un sitio de descanso"], correct: 0, verse: "Mateo 4:19", verseText: "Y les dijo: Venid en pos de mí, y os haré pescadores de hombres." },
+            { question: "21. ¿Qué actitud tenía el apóstol Pablo al cumplir su ministerio de evangelización?", options: ["Desinterés por las almas", "Acabaría su carrera con gozo guardando la fe y predicando sin cesar", "Buscaba fama personal", "Trabajaba por obligación"], correct: 1, verse: "2 Timoteo 4:7", verseText: "He peleado la buena batalla, he acabado la carrera, he guardado la fe." },
+            { question: "22. ¿Quiénes son llamados a cumplir la Gran Comisión hoy en día?", options: ["Únicamente los pastores", "Solo los misioneros antiguos", "Todo creyente que ha recibido a Cristo en su corazón", "Nadie en la actualidad"], correct: 2, verse: "Mateo 28:19", verseText: "Por tanto, id, y haced discípulos a todas las naciones..." },
+            { question: "23. ¿Qué herramienta de comunicación moderna nos ayuda hoy a cumplir con llevar el evangelio a todo el mundo?", options: ["Los medios de difusión masiva y la radio como Shock 99.5 FM", "Ninguna tecnología", "Solamente pergaminos antiguos", "Dispositivos bloqueados"], correct: 0, verse: "Marcos 16:15", verseText: "Id por todo el mundo y predicad el evangelio a toda criatura." },
+            { question: "24. ¿Qué respondió Pedro cuando Jesús preguntó: '¿Queréis vosotros también iros?'", options: ["Señor, ¿a quién iremos? Tú tienes palabras de vida eterna", "Nos iremos con los demás", "No lo sabemos", "Tenemos miedo"], correct: 0, verse: "Juan 6:68", verseText: "Simón Pedro le respondió: Señor, ¿a quién iremos? Tú tienes palabras de vida eterna." },
+            { question: "25. ¿Qué recompensa prometió Jesús a quienes dejan todo por causa de su nombre y del evangelio?", options: ["Pérdida total", "Recibir cien veces más en este tiempo y vida eterna en el venidero", "Dificultades eternas", "Ningún beneficio"], correct: 1, verse: "Marcos 10:29-30", verseText: "...no hay ninguno que haya dejado casa, o hermanos... por causa de mi nombre y del evangelio, que no reciba cien veces más ahora..." },
+            { question: "26. ¿Qué nos enseña la parábola de la red barredera sobre el llamado a todas las personas?", options: ["Que el mensaje debe ser llevado a toda persona sin distinción", "Que debemos excluir a la gente", "Que la pesca es difícil", "Que el mar es peligroso"], correct: 0, verse: "Mateo 13:47", verseText: "Asimismo el reino de los cielos es semejante a una red, que echada en el mar, atrapa toda clase de peces." },
+            { question: "27. ¿Qué instrucción dio Jesús sobre cómo entrar a las aldeas a predicar?", options: ["Con ira y juicio", "Paz sea a esta casa", "Ignorando a la gente", "Exigiendo dinero"], correct: 1, verse: "Lucas 10:5", verseText: "En cualquier casa donde entréis, primeramente decid: Paz sea a esta casa." },
+            { question: "28. ¿Qué representa la barca de Pedro en el evangelismo?", options: ["Un medio para navegar y llevar la palabra a las multitudes", "Un objeto sin valor", "Una cárcel", "Una carga pesada"], correct: 0, verse: "Lucas 5:3", verseText: "Y entrando en una de aquellas barcas, la cual era de Simón, le rogó que la apartase de tierra un poco; y sentándose, enseñaba desde la barca a la multitud." },
+            { question: "29. ¿Qué debemos hacer cuando encontramos el tesoro del reino de los cielos?", options: ["Esconderlo y callar", "Compartirlo con gozo anunciando las buenas nuevas a otros", "Olvidarlo", "Desperdiciarlo"], correct: 1, verse: "Mateo 13:44", verseText: "Además, el reino de los cielos es semejante a un tesoro escondido en un campo... y de gozo va y vende todo lo que tiene, y compra aquel campo." },
+            { question: "30. ¿Qué dijo el apóstol Pablo sobre anunciar el evangelio en 1 Corintios 9:16?", options: ["¡Ay de mí si no anunciare el evangelio!", "Es opcional predicar", "Nadie está obligado", "Es mejor callar"], correct: 0, verse: "1 Corintios 9:16", verseText: "Pues si anuncio el evangelio, no tengo por qué gloriarme; porque me es impuesta necesidad; y ¡ay de mí si no anunciare el evangelio!" },
+            { question: "31. ¿Cuál es el mensaje central que Pedro predicó con poder en el Nuevo Testamento?", options: ["La salvación y el perdón de pecados a través de Jesucristo", "Filosofía humana", "Leyes antiguas de comercio", "Costumbres temporales"], correct: 0, verse: "Hechos 4:12", verseText: "Y en ningún otro hay salvación; porque no hay otro nombre bajo el cielo, dado a los hombres, en que podamos ser salvos." },
+            { question: "32. ¿Qué actitud tenía la iglesia primitiva tras recibir la comisión de Jesús?", options: ["Miedo constante", "Y todos los días, en el templo y por las casas, no cesaban de enseñar y predicar a Jesucristo", "Se dispersaron sin propósito", "Cerraron las puertas"], correct: 1, verse: "Hechos 5:42", verseText: "Y todos los días, en el templo y por las casas, no cesaban de enseñar y predicar a Jesucristo." },
+            { question: "33. ¿Qué dice Proverbios 11:30 acerca del ganador de almas?", options: ["El que gana almas es sabio", "El que gana almas pierde su tiempo", "La sabiduría no importa", "El trabajo es en vano"], correct: 0, verse: "Proverbios 11:30", verseText: "El fruto del justo es árbol de vida; y el que gana almas es sabio." },
+            { question: "34. ¿Qué nos recuerda el ejemplo de Felipe al evangelizar al etíope en el camino?", options: ["Que debemos estar dispuestos a guiar a otros hacia Cristo cuando el Espíritu nos guía", "Que debemos viajar solos", "Que no se debe hablar con extraños", "Que la lectura no sirve"], correct: 0, verse: "Hechos 8:35", verseText: "Entonces Felipe, abriendo su boca, y comenzando desde esta escritura, le anunció el evangelio de Jesús." },
+            { question: "35. ¿Por qué es urgente la gran comisión de llevar el evangelio al mundo entero?", options: ["Porque la mies es mucha y los obreros pocos", "Porque hay mucho tiempo libre", "Porque es un requisito escolar", "Porque no hay otra actividad"], correct: 0, verse: "Mateo 9:37", verseText: "Entonces dijo a sus discípulos: A la verdad la mies es mucha, más los obreros pocos." },
+            { question: "36. ¿Qué ocurre en el cielo cuando un pecador se arrepiente y es alcanzado por el evangelio?", options: ["Hay tristeza", "Hay gozo delante de los ángeles de Dios", "No pasa nada", "Silencio absoluto"], correct: 1, verse: "Lucas 15:10", verseText: "Así os digo que hay gozo delante de los ángeles de Dios por un pecador que se arrepiente." },
+            { question: "37. ¿Qué nos anima Isaías 52:7 sobre los mensajeros del evangelio?", options: ["¡Cuán hermosos son sobre los montes los pies del que trae alegres nuevas!", "¡Qué cansados están los mensajeros!", "El camino es muy largo", "Nadie escucha el mensaje"], correct: 0, verse: "Isaías 52:7", verseText: "¡Cuán hermosos son sobre los montes los pies del que trae alegres nuevas, del que publica la paz, del que trae nuevas del bien, del que publica salvación..." },
+            { question: "38. ¿Cuál es el compromiso de un verdadero discípulo de Jesús según su llamado?", options: ["Seguirle diariamente y pescar hombres para su reino", "Buscar comodidades personales", "Alejarse de la gente", "Ignorar las enseñanzas"], correct: 0, verse: "Lucas 9:23", verseText: "Y decía a todos: Si alguno quiere venir en pos de mí, niéguese a sí mismo, tome su cruz cada día, y sígame." },
+            { question: "39. ¿Qué nos garantiza Jesús al cumplir su mandato de llevar el evangelio?", options: ["Su presencia constante y respaldo eterno", "Soledad absoluta", "Falta de recursos", "Incertidumbre total"], correct: 0, verse: "Mateo 28:20", verseText: "...y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén." },
+            { question: "40. ¿Cuál debe ser nuestra respuesta final al mandato de ser Pescadores de Hombres?", options: ["Decir 'Heme aquí, envíame a mí'", "Quedarnos inactivos", "Esperar que otros lo hagan", "Ignorar el llamado"], correct: 0, verse: "Isaías 6:8", verseText: "Después oí la voz del Señor, que decía: ¿A quién enviaré, y quién irá por nosotros? Entonces respondí yo: Heme aquí, envíame a mí." }
+        ];
+
+        let currentIndex = 0;
+        let maxUnlockedLevel = 0;
+        let completedLevels = new Set();
+        let isAudioEnabled = true;
+        let isAnsweringBlocked = false;
+        let bestVoice = null;
+
+        // AL CARGAR: La ventana de narrativa inicia abierta, pero la voz NO suena automáticamente 
+        // hasta que el usuario toca el botón de "Escuchar Narración" o toca el icono de la Gran Comisión.
+        window.addEventListener('DOMContentLoaded', () => {
+            initAudio();
+            loadNaturalVoice();
+        });
+
+        function triggerNarrativeVoice() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            
+            const startBtn = document.getElementById('start-mission-btn');
+            startBtn.disabled = true;
+            startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2";
+            startBtn.innerHTML = `<i class="fa-solid fa-volume-high animate-pulse"></i> Narrando...`;
+
+            const text1 = document.getElementById('narrative-text-1').innerText;
+            const text2 = document.getElementById('narrative-text-2').innerText;
+            const text3 = document.getElementById('narrative-text-3').innerText;
+            const fullNarrative = `${text1} ${text2} ${text3}`;
+
+            speakText(fullNarrative, () => {
+                startBtn.disabled = false;
+                startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
+                startBtn.innerHTML = `<i class="fa-solid fa-bolt text-yellow-300"></i> ¡Comenzar la Misión!`;
+            });
+        }
+
+        function openNarrativeModal() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('narrative-overlay').style.display = 'flex';
+            triggerNarrativeVoice();
+        }
+
+        function startMainGameFromNarrative() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('narrative-overlay').style.display = 'none';
+            loadSavedProgress();
+            renderLevelGrid();
+            renderQuestion();
+        }
+
+        function loadSavedProgress() {
+            try {
+                const savedMax = localStorage.getItem('pescadores_40_max');
+                const savedCompleted = localStorage.getItem('pescadores_40_completed');
+                if (savedMax !== null) maxUnlockedLevel = parseInt(savedMax, 10);
+                if (savedCompleted !== null) completedLevels = new Set(JSON.parse(savedCompleted));
+            } catch(e) {}
+            updateHUDScore();
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('pescadores_40_max', maxUnlockedLevel);
+                localStorage.setItem('pescadores_40_completed', JSON.stringify(Array.from(completedLevels)));
+            } catch(e) {}
+        }
+
+        function updateHUDScore() {
+            document.getElementById('star-score-hud').innerText = `${completedLevels.size} / 40`;
+        }
+
+        function confirmReset() {
+            if (confirm("¿Seguro que deseas reiniciar tu ruta de pescador de hombres y volver al Nivel 1?")) {
+                resetAndPlayAgain();
+            }
+        }
+
+        function resetAndPlayAgain() {
+            try {
+                localStorage.removeItem('pescadores_40_max');
+                localStorage.removeItem('pescadores_40_completed');
+            } catch(e) {}
+            maxUnlockedLevel = 0;
+            completedLevels.clear();
+            currentIndex = 0;
+            updateHUDScore();
+            document.getElementById('trophy-modal').classList.add('hidden');
+            renderLevelGrid();
+            renderQuestion();
+        }
+
+        function closeTrophyModal() {
+            document.getElementById('trophy-modal').classList.add('hidden');
+        }
+
+        let audioCtx = null;
+        function initAudio() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            } catch(e) {}
+        }
+
+        function playShockLightningSound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
+                gain.gain.setValueAtTime(0.35, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } catch(e) {}
+        }
+
+        function playErrorSound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.setValueAtTime(100, now + 0.15);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } catch(e) {}
+        }
+
+        function loadNaturalVoice() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            bestVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Jorge') || v.name.includes('Monica')))
+                     || voices.find(v => v.lang.startsWith('es'));
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadNaturalVoice;
+        }
+
+        function speakText(text, onEndCallback = null) {
+            if (!isAudioEnabled || !('speechSynthesis' in window)) {
+                if (onEndCallback) onEndCallback();
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            if (bestVoice) utterance.voice = bestVoice;
+            if (onEndCallback) {
+                utterance.onend = onEndCallback;
+                utterance.onerror = onEndCallback;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleAudio() {
+            isAudioEnabled = !isAudioEnabled;
+            document.getElementById('tts-status').innerText = isAudioEnabled ? "Voz ON" : "Voz OFF";
+            document.getElementById('tts-icon').className = isAudioEnabled ? "fa-solid fa-volume-high text-xs" : "fa-solid fa-volume-xmark text-xs text-red-400";
+            if (!isAudioEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function renderLevelGrid() {
+            const container = document.getElementById('levels-grid-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            for (let i = 0; i < 40; i++) {
+                const btn = document.createElement('button');
+                let stateClass = 'locked';
+                let iconHtml = `<i class="fa-solid fa-lock text-[8px] block opacity-50"></i>`;
+
+                if (completedLevels.has(i)) {
+                    stateClass = 'completed';
+                    iconHtml = `<i class="fa-solid fa-check text-[8px] block text-emerald-200"></i>`;
+                } else if (i === currentIndex) {
+                    stateClass = 'current';
+                    iconHtml = `<i class="fa-solid fa-anchor text-[8px] block"></i>`;
+                } else if (i <= maxUnlockedLevel) {
+                    stateClass = 'unlocked bg-stone-800 text-blue-300 border-blue-500/50';
+                    iconHtml = `<i class="fa-solid fa-water text-[8px] block text-blue-400"></i>`;
+                }
+
+                btn.className = `level-btn ${stateClass} border h-9 rounded-xl flex flex-col items-center justify-center font-bold text-[11px] shadow-sm transition`;
+                btn.innerHTML = `<span>${i + 1}</span>${iconHtml}`;
+
+                if (i <= maxUnlockedLevel) {
+                    btn.onclick = () => {
+                        currentIndex = i;
+                        renderLevelGrid();
+                        renderQuestion();
+                    };
+                } else {
+                    btn.disabled = true;
+                }
+                container.appendChild(btn);
+            }
+
+            const percent = Math.round((completedLevels.size / 40) * 100);
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+        }
+
+        function renderQuestion() {
+            isAnsweringBlocked = false;
+            const q = questionsDB[currentIndex];
+            const currentLevel = currentIndex + 1;
+
+            document.getElementById('level-indicator').innerText = `Nivel ${currentLevel} de 40`;
+            document.getElementById('group-indicator').innerText = `Pescadores y Evangelismo`;
+
+            const progressPercent = (completedLevels.size / 40) * 100;
+            document.getElementById('progress-bar').style.width = `${Math.max(progressPercent, 1)}%`;
+            document.getElementById('question-text').innerText = q.question;
+
+            const feedback = document.getElementById('feedback-box');
+            feedback.className = "hidden";
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-3 sm:p-4 rounded-xl font-semibold text-stone-200 flex items-center justify-between text-xs sm:text-sm";
+                btn.onclick = () => handleAnswer(idx, btn);
+                btn.innerHTML = `<span>${opt}</span><span class="w-6 h-6 rounded-full border border-blue-500/30 flex items-center justify-center text-xs font-bold text-sky-400 bg-black/40">${String.fromCharCode(65 + idx)}</span>`;
+                optionsContainer.appendChild(btn);
+            });
+
+            readCurrentQuestion();
+        }
+
+        function readCurrentQuestion() {
+            const q = questionsDB[currentIndex];
+            speakText(`Nivel ${currentIndex + 1}. ${q.question}. Opción A: ${q.options[0]}. Opción B: ${q.options[1]}. Opción C: ${q.options[2]}. Opción D: ${q.options[3]}`);
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            if (isAnsweringBlocked) return;
+
+            const q = questionsDB[currentIndex];
+            const feedback = document.getElementById('feedback-box');
+
+            if (selectedIndex === q.correct) {
+                isAnsweringBlocked = true;
+
+                // Rayos Shock directo en el botón seleccionado
+                const rect = btnElement.getBoundingClientRect();
+                triggerShockLightning(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                playShockLightningSound();
+                spawnElectricSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+                if (!completedLevels.has(currentIndex)) completedLevels.add(currentIndex);
+                if (currentIndex + 1 > maxUnlockedLevel && currentIndex + 1 < 40) maxUnlockedLevel = currentIndex + 1;
+
+                saveProgress();
+                updateHUDScore();
+
+                btnElement.className = "w-full text-left p-3 sm:p-4 rounded-xl font-bold text-black bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 border-2 border-yellow-200 shadow-lg flex items-center justify-between text-xs sm:text-sm";
+
+                feedback.innerHTML = `
+                    <div class="flex flex-col items-center gap-2 text-sky-200">
+                        <div class="font-black text-xs sm:text-sm uppercase tracking-wider text-yellow-300 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-yellow-300 animate-bounce"></i> ¡RAYOS SHOCK ACTIVADOS! ¡CORRECTO! ⚡
+                        </div>
+                        <div class="text-[11px] sm:text-xs font-bold text-blue-300 italic border-t border-blue-500/30 pt-1.5 w-full"><i class="fa-solid fa-book-bible text-blue-400 mr-1"></i> ${q.verse}</div>
+                        <p class="text-[10px] sm:text-[11px] text-stone-200 font-medium italic leading-relaxed">"${q.verseText}"</p>
+                        <button id="next-level-btn" onclick="advanceToNextLevel()" disabled class="mt-2 w-full py-2.5 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed">
+                            <i class="fa-solid fa-volume-high mr-1 animate-pulse"></i> Escuchando Texto Bíblico...
+                        </button>
+                    </div>
+                `;
+                feedback.className = "block rounded-xl p-3 sm:p-4 text-center bg-blue-950/95 border-2 border-blue-500/80 shadow-2xl backdrop-blur-md mb-3";
+
+                // Narración obligatoria: no avanza hasta terminar el audio y pulsar el botón
+                speakText(`¡Rayo Shock correcto! Como dice en ${q.verse}: ${q.verseText}`, () => {
+                    const nextBtn = document.getElementById('next-level-btn');
+                    if (nextBtn) {
+                        nextBtn.disabled = false;
+                        nextBtn.className = "mt-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg active:scale-95 transition cursor-pointer";
+                        nextBtn.innerHTML = `<i class="fa-solid fa-arrow-right mr-1"></i> Continuar al Siguiente Nivel`;
+                    }
+                });
+
+            } else {
+                playErrorSound();
+                btnElement.className = "w-full text-left p-3 sm:p-4 rounded-xl font-semibold text-red-200 bg-red-950/70 border-2 border-red-500/80 flex items-center justify-between text-xs sm:text-sm";
+                btnElement.disabled = true;
+
+                feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-400"></i> Incorrecto. ¡Vuelve a intentarlo para desatar el Rayo Shock!`;
+                feedback.className = "block rounded-xl p-2.5 sm:p-3 text-center font-bold text-xs sm:text-sm bg-red-950/80 border border-red-500/60 text-red-200 backdrop-blur-md mb-2";
+
+                speakText("Incorrecto. Intenta con otra opción.");
+            }
+        }
+
+        function advanceToNextLevel() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (completedLevels.size === 40) {
+                showTrophyModal();
+            } else {
+                if (currentIndex < 39) currentIndex++;
+                renderLevelGrid();
+                renderQuestion();
+            }
+        }
+
+        function showTrophyModal() {
+            document.getElementById('trophy-modal').classList.remove('hidden');
+            speakText("¡Felicidades! Has completado exitosamente la misión de Pescadores de Hombres y la gran comisión.");
+        }
+
+        // --- CANVAS DE FONDO MARINO Y RAYOS SHOCK ELÉCTRICOS ---
+        const seaCanvas = document.getElementById('sea-canvas');
+        const sCtx = seaCanvas.getContext('2d');
+        const strikeCanvas = document.getElementById('strike-lightning-canvas');
+        const stCtx = strikeCanvas.getContext('2d');
+        const particleCanvas = document.getElementById('particle-canvas');
+        const pCtx = particleCanvas.getContext('2d');
+
+        function resizeCanvases() {
+            seaCanvas.width = strikeCanvas.width = particleCanvas.width = window.innerWidth;
+            seaCanvas.height = strikeCanvas.height = particleCanvas.height = window.innerHeight;
+            drawSeaBackground();
+        }
+
+        function drawSeaBackground() {
+            const w = seaCanvas.width, h = seaCanvas.height;
+            sCtx.clearRect(0, 0, w, h);
+            const bgGrad = sCtx.createLinearGradient(0, 0, 0, h);
+            bgGrad.addColorStop(0, '#020617');
+            bgGrad.addColorStop(0.5, '#0b132b');
+            bgGrad.addColorStop(1, '#030712');
+            sCtx.fillStyle = bgGrad;
+            sCtx.fillRect(0, 0, w, h);
+
+            sCtx.fillStyle = 'rgba(56, 189, 248, 0.03)';
+            sCtx.beginPath();
+            sCtx.arc(w * 0.5, h * 0.2, w * 0.4, 0, Math.PI * 2);
+            sCtx.fill();
+        }
+
+        function triggerShockLightning(targetX, targetY) {
+            document.body.classList.add('flash-screen');
+            setTimeout(() => document.body.classList.remove('flash-screen'), 300);
+
+            const startX = targetX + (Math.random() - 0.5) * 150;
+            const startY = 0;
+            let alpha = 1.0;
+
+            function animateBolt() {
+                stCtx.clearRect(0, 0, strikeCanvas.width, strikeCanvas.height);
+                if (alpha <= 0) return;
+
+                stCtx.save();
+                stCtx.beginPath();
+                stCtx.moveTo(startX, startY);
+                
+                let currX = startX;
+                let currY = startY;
+                const steps = 8;
+                for (let i = 1; i <= steps; i++) {
+                    const progress = i / steps;
+                    currY = startY + (targetY - startY) * progress;
+                    currX = startX + (targetX - startX) * progress + (Math.random() - 0.5) * 50;
+                    stCtx.lineTo(currX, currY);
+                }
+
+                stCtx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
+                stCtx.lineWidth = 5;
+                stCtx.shadowColor = 'rgba(14, 165, 233, 1)';
+                stCtx.shadowBlur = 25;
+                stCtx.stroke();
+
+                stCtx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                stCtx.lineWidth = 2;
+                stCtx.stroke();
+                stCtx.restore();
+
+                alpha -= 0.1;
+                requestAnimationFrame(animateBolt);
+            }
+
+            animateBolt();
+        }
+
+        let particles = [];
+        function spawnElectricSparks(x, y) {
+            for (let i = 0; i < 25; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 6;
+                particles.push({
+                    x, y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: 4 + Math.random() * 6,
+                    color: Math.random() > 0.5 ? '#facc15' : '#38bdf8',
+                    alpha: 1.0
+                });
+            }
+        }
+
+        function renderParticles() {
+            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.03;
+
+                pCtx.save();
+                pCtx.fillStyle = p.color;
+                pCtx.globalAlpha = p.alpha;
+                pCtx.shadowColor = p.color;
+                pCtx.shadowBlur = 10;
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                pCtx.fill();
+                pCtx.restore();
+            }
+            requestAnimationFrame(renderParticles);
+        }
+
+        window.onload = function() {
+            resizeCanvases();
+            renderParticles();
+        };
+        window.onresize = resizeCanvases;
+    </script>
+</body>
+</html>
