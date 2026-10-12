@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Pequeños Exploradores Shock - Pescadores de Hombres | Shock 99.5 FM & Theos Logos</title>
+    <title>Pequeños Exploradores Shock - La Oveja Perdida | Shock 99.5 FM & Theos Logos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -15,69 +15,110 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #030712;
+            background-color: #050208;
             color: #f3f4f6;
             overflow-x: hidden;
             user-select: none;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* CONTENEDOR PRINCIPAL ADAPTABLE PARA PC Y MÓVIL */
+        .app-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: 0 auto;
         }
 
         .font-cinzel {
             font-family: 'Cinzel', serif;
         }
 
-        #sea-canvas, #strike-lightning-canvas, #particle-canvas {
+        #celebration-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             pointer-events: none !important;
+            z-index: 40;
         }
-
-        #sea-canvas { z-index: 0; }
-        #particle-canvas { z-index: 35; }
-        #strike-lightning-canvas { z-index: 40; }
 
         .glass-card {
-            background: rgba(10, 15, 30, 0.94);
+            background: rgba(18, 8, 25, 0.94);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.9), 0 0 30px rgba(14, 165, 233, 0.25);
+            border: 1px solid rgba(255, 185, 50, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 120, 0, 0.25);
         }
 
-        .option-btn {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.6) 100%);
-            border: 1.5px solid rgba(59, 130, 246, 0.4);
-            transition: all 0.2s ease;
+        #game-pasture {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(180deg, #235427 0%, #0c2c0e 100%);
+            border: 2px solid rgba(245, 158, 11, 0.5);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
 
-        .option-btn:active:not(:disabled) {
-            transform: scale(0.98);
+        #rescued-fold {
+            position: relative;
+            width: 100%;
+            min-height: 380px;
+            background: radial-gradient(circle, rgba(40,20,5,0.9) 0%, rgba(15,8,3,0.95) 100%);
+            border: 2px dashed rgba(245, 158, 11, 0.6);
+            border-radius: 1.5rem;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
         }
 
-        .level-btn.completed {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        .animal-btn {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .animal-btn:active {
+            transform: scale(0.85);
+        }
+
+        .obstacle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .level-grid-btn.completed {
+            background: #059669;
             border-color: #34d399;
-            color: #ffffff;
-            box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+            color: #fff;
         }
-        .level-btn.current {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            border-color: #60a5fa;
-            color: #ffffff;
-            box-shadow: 0 0 12px rgba(96, 165, 250, 0.9);
-            animation: pulseGlow 1.5s infinite alternate;
+        .level-grid-btn.current {
+            background: #d97706;
+            border-color: #f59e0b;
+            color: #fff;
+            animation: pulse 1.5s infinite alternate;
         }
-        .level-btn.locked {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(100, 116, 139, 0.2);
-            color: rgba(100, 116, 139, 0.4);
+        .level-grid-btn.locked {
+            background: rgba(20, 10, 25, 0.6);
+            border-color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
             cursor: not-allowed;
         }
 
-        @keyframes pulseGlow {
+        @keyframes pulse {
             0% { transform: scale(1); }
             100% { transform: scale(1.05); }
         }
@@ -87,43 +128,43 @@
         }
 
         @keyframes flashAnim {
-            0% { background-color: rgba(56, 189, 248, 0.85); }
+            0% { background-color: rgba(255, 215, 0, 0.4); }
             100% { background-color: transparent; }
         }
 
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(20, 10, 25, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 4px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative selection:bg-blue-500 selection:text-white">
+<body class="selection:bg-amber-500 selection:text-black">
 
-    <!-- 1. PANTALLA DE NARRATIVA PROFUNDA INICIAL -->
+    <!-- OVERLAY DE NARRATIVA PROFUNDA INICIAL -->
     <div id="narrative-overlay" class="fixed inset-0 bg-black/98 z-50 flex flex-col items-center justify-center p-4 sm:p-6 text-center">
-        <div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-8 border-2 border-sky-500/80 shadow-[0_0_60px_rgba(14,165,233,0.4)] flex flex-col items-center">
+        <div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-8 border-2 border-amber-500/80 shadow-[0_0_60px_rgba(245,158,11,0.5)] flex flex-col items-center">
             
             <div id="narrative-logo-container" class="h-16 mb-4 flex items-center justify-center">
-                <img src="shock.png" alt="Shock 99.5 FM" class="h-16 object-contain drop-shadow-[0_0_15px_rgba(14,165,233,0.8)]" onError="renderFallbackShockLogo('narrative-logo-container', 64);">
+                <img src="shock.png" alt="Shock 99.5 FM" class="h-16 object-contain drop-shadow-[0_0_15px_rgba(255,120,0,0.8)]" onError="renderFallbackShockLogo('narrative-logo-container', 64);">
             </div>
 
-            <h1 class="font-cinzel text-lg sm:text-2xl font-bold text-sky-300 mb-2">El Llamado a las Orillas del Mar</h1>
-            <p class="text-xs sm:text-xs font-semibold text-blue-400 mb-4 uppercase tracking-widest">Mateo 4:18-20 • La Misión de Evangelizar</p>
+            <h1 class="font-cinzel text-lg sm:text-2xl font-bold text-amber-300 mb-1">El Buen Pastor y la Oveja Perdida</h1>
+            <h2 class="text-xs sm:text-sm text-yellow-400 font-bold mb-4 uppercase tracking-wider">Lucas 15:4 • Un Amor que no se Rinde</h2>
 
-            <div class="bg-blue-950/50 p-4 sm:p-5 rounded-2xl border border-blue-500/30 mb-6 text-left max-h-[220px] sm:max-h-[260px] overflow-y-auto space-y-3">
+            <div class="bg-amber-950/40 p-4 sm:p-5 rounded-2xl border border-amber-500/30 mb-6 text-left max-h-[220px] sm:max-h-[260px] overflow-y-auto space-y-3">
                 <p id="narrative-text-1" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
-                    A la orilla del apacible mar de Galilea, la vida transcurría entre redes gastadas por el salitre y el esfuerzo diario de hombres dedicados a la pesca. Entre ellos estaban Simón, a quien llamaban Pedro, y su hermano Andrés. Sus manos conocían el oficio del mar, pero sus corazones estaban siendo preparados para un propósito eterno.
+                    En medio de los campos y colinas de Judea, el pastor cuida con esmero de su rebaño. Cada oveja tiene un nombre y es amada profundamente. Sin embargo, en un descuido o buscando nuevos horizontes, una pequeña oveja se aparta del camino y se pierde en la espesura, expuesta al peligro y a la soledad.
                 </p>
                 <p id="narrative-text-2" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
-                    Cuando Jesús pasó por la orilla y les miró a los ojos, no solo les ofreció una barca diferente; les hizo una promesa que cambiaría la historia: "Venid en pos de mí, y os haré pescadores de hombres". En aquel instante, dejando las redes atrás, comenzó la más grande misión de evangelización jamás encomendada.
+                    Lejos de darla por olvidada, el Buen Pastor deja las noventa y nueve en el aprisco y emprende un viaje lleno de valentía para buscar a la que se había extraviado, hasta que la halla con alegría. Esa es la historia de cómo Jesús vino a buscar y a salvar lo que se había perdido, mostrando un amor inagotable.
                 </p>
-                <p id="narrative-text-3" class="text-xs sm:text-sm text-sky-200 font-semibold leading-relaxed border-t border-blue-500/30 pt-3">
-                    Hoy, este llamado resuena con la misma fuerza para ti y para toda la Iglesia de Cristo. La barca está lista, los campos están listos para la cosecha y el mundo necesita escuchar las buenas nuevas de salvación. ¡Levantemos nuestra voz con pasión, seamos audaces en el evangelismo y cumplamos la gran comisión que nuestro Maestro nos encomendó!
+                <p id="narrative-text-3" class="text-xs sm:text-sm text-amber-200 font-semibold leading-relaxed border-t border-amber-500/30 pt-3">
+                    Hoy, este juego nos recuerda nuestra hermosa misión de reflejar ese mismo amor. Hay corazones que necesitan ser alcanzados y rescatados. ¡Seamos fieles exploradores, llevemos el mensaje de salvación y acompáñanos a rescatar las 100 ovejas perdidas llevándolas al Redil Protegido de Dios!
                 </p>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 w-full">
-                <button onclick="triggerNarrativeVoice()" class="flex-1 py-3 px-4 rounded-xl bg-blue-900/60 border border-blue-500/40 text-sky-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-volume-high text-sky-400"></i> Escuchar Narración
+                <button onclick="triggerNarrativeVoice()" class="flex-1 py-3 px-4 rounded-xl bg-amber-900/60 border border-amber-500/40 text-amber-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-volume-high text-yellow-400"></i> Escuchar Narración
                 </button>
                 <button id="start-mission-btn" onclick="startMainGameFromNarrative()" disabled class="flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2">
                     <i class="fa-solid fa-lock"></i> Esperando Narración...
@@ -132,32 +173,29 @@
         </div>
     </div>
 
-    <!-- CANVASES DE EFECTOS -->
-    <canvas id="sea-canvas"></canvas>
-    <canvas id="particle-canvas"></canvas>
-    <canvas id="strike-lightning-canvas"></canvas>
+    <canvas id="celebration-canvas"></canvas>
 
-    <!-- APP CONTAINER -->
-    <div class="relative z-10 min-h-screen flex flex-col justify-between">
+    <!-- APP WRAPPER PARA ADAPTACIÓN AUTOMÁTICA EN TODAS LAS PANTALLAS -->
+    <div class="app-wrapper">
 
         <!-- HEADER -->
-        <header class="w-full bg-black/90 border-b border-blue-900/50 backdrop-blur-md p-2.5 sm:p-4 sticky top-0 z-30 shadow-2xl">
-            <div class="max-w-5xl mx-auto flex flex-row justify-between items-center gap-2">
+        <header class="w-full bg-black/90 border-b border-amber-900/50 backdrop-blur-md p-2.5 sm:p-4 sticky top-0 z-30 shadow-2xl">
+            <div class="max-w-7xl mx-auto flex flex-row justify-between items-center gap-2">
                 
                 <div id="header-logo-container" class="flex items-center gap-2 h-9 sm:h-14">
-                    <img src="shock.png" alt="Shock 99.5 FM" class="h-9 sm:h-14 object-contain drop-shadow-[0_0_12px_rgba(14,165,233,0.8)]" onError="renderFallbackShockLogo('header-logo-container', 48);">
+                    <img src="shock.png" alt="Shock 99.5 FM" class="h-9 sm:h-14 object-contain drop-shadow-[0_0_12px_rgba(255,120,0,0.8)]" onError="renderFallbackShockLogo('header-logo-container', 48);">
                 </div>
 
-                <!-- HUD PUNTOS, ICONO GRAN COMISION Y AUDIO -->
-                <div class="flex items-center gap-1.5 sm:gap-3 bg-stone-900/90 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-blue-500/40">
+                <!-- HUD STAR SCORE E ICONO DE RESEÑA -->
+                <div class="flex items-center gap-1.5 sm:gap-3 bg-stone-900/90 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-amber-500/40">
                     
-                    <!-- BOTÓN ICONO DE LA GRAN COMISIÓN PARA ABRIR NARRATIVA -->
-                    <button onclick="openNarrativeModal()" class="text-yellow-400 hover:text-yellow-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2.5 sm:px-3 py-1 rounded-lg border border-amber-600/40" title="La Gran Comisión y Reseña">
-                        <i class="fa-solid fa-earth-americas text-yellow-300 text-xs sm:text-sm animate-pulse"></i>
-                        <span class="hidden md:inline">Gran Comisión</span>
+                    <!-- BOTÓN ICONO DE LA RESEÑA BÍBLICA -->
+                    <button onclick="openNarrativeModal()" class="text-yellow-400 hover:text-yellow-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2.5 sm:px-3 py-1 rounded-lg border border-amber-600/40" title="Reseña del Buen Pastor">
+                        <i class="fa-solid fa-book-bible text-yellow-300 text-xs sm:text-sm animate-pulse"></i>
+                        <span class="hidden md:inline">El Buen Pastor</span>
                     </button>
 
-                    <button id="tts-toggle" onclick="toggleAudio()" class="text-sky-400 hover:text-sky-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-blue-950/60 px-2 sm:px-3 py-1 rounded-lg border border-blue-600/40">
+                    <button id="tts-toggle" onclick="toggleAudio()" class="text-amber-400 hover:text-amber-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2 sm:px-3 py-1 rounded-lg border border-amber-600/40">
                         <i id="tts-icon" class="fa-solid fa-volume-high text-xs"></i>
                         <span id="tts-status" class="hidden sm:inline">Voz ON</span>
                     </button>
@@ -166,11 +204,11 @@
                         <i class="fa-solid fa-trash-can"></i> <span class="hidden sm:inline">Reiniciar</span>
                     </button>
 
-                    <div class="flex items-center gap-1.5 text-sky-400 font-bold border-l border-blue-500/30 pl-2 sm:pl-3">
-                        <i class="fa-solid fa-fish text-sky-300 text-sm sm:text-lg drop-shadow-[0_0_10px_rgba(56,189,248,0.9)]"></i>
+                    <div class="flex items-center gap-1.5 text-yellow-400 font-bold border-l border-amber-500/30 pl-2 sm:pl-3">
+                        <i class="fa-solid fa-star text-amber-300 text-sm sm:text-lg drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]"></i>
                         <div class="flex flex-col text-left">
-                            <span class="text-[8px] sm:text-[9px] uppercase tracking-wider text-sky-200/70 font-semibold leading-none">NIVELES</span>
-                            <span id="star-score-hud" class="font-black text-xs sm:text-base leading-none text-sky-300">0 / 40</span>
+                            <span class="text-[8px] sm:text-[9px] uppercase tracking-wider text-amber-200/70 font-semibold leading-none">OVEJAS</span>
+                            <span id="star-score-hud" class="font-black text-xs sm:text-base leading-none text-yellow-300">0 / 100</span>
                         </div>
                     </div>
                 </div>
@@ -179,116 +217,166 @@
         </header>
 
         <!-- MAIN AREA -->
-        <main class="flex-grow max-w-5xl w-full mx-auto p-2.5 sm:p-6 my-1 sm:my-2 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+        <main class="flex-grow max-w-7xl w-full mx-auto p-2.5 sm:p-6 my-1 sm:my-2 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
             
-            <!-- PANEL DE NIVELES (40 NIVELES) -->
-            <section class="lg:col-span-5 glass-card rounded-2xl sm:rounded-3xl p-3 sm:p-5 border border-blue-500/40 order-2 lg:order-1">
-                <div class="flex justify-between items-center mb-2 sm:mb-3 pb-1.5 border-b border-blue-500/20">
-                    <h3 class="font-cinzel text-blue-300 font-bold text-xs sm:text-sm uppercase flex items-center gap-1.5">
-                        <i class="fa-solid fa-anchor text-blue-400"></i> Ruta de Pescadores (40)
+            <!-- MAPA DE 40 NIVELES -->
+            <section class="lg:col-span-3 glass-card rounded-2xl sm:rounded-3xl p-3 border border-amber-500/40 order-2 lg:order-1">
+                <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-amber-500/20">
+                    <h3 class="font-cinzel text-amber-300 font-bold text-xs uppercase flex items-center gap-1">
+                        <i class="fa-solid fa-layer-group text-amber-400"></i> Niveles (40)
                     </h3>
-                    <span id="progress-percent" class="text-xs font-bold text-blue-400">0%</span>
+                    <span id="progress-percent" class="text-xs font-bold text-amber-400">0%</span>
                 </div>
 
-                <div class="grid grid-cols-4 gap-2 max-h-[340px] sm:max-h-[440px] overflow-y-auto pr-1" id="levels-grid-container"></div>
+                <div id="levels-list" class="grid grid-cols-4 gap-2 max-h-[360px] overflow-y-auto pr-1"></div>
             </section>
 
-            <!-- TARJETA DE PREGUNTA / MISION -->
-            <section class="lg:col-span-7 glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-7 relative border border-blue-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] order-1 lg:order-2">
+            <!-- CAMPO DE BÚSQUEDA -->
+            <section class="lg:col-span-6 glass-card rounded-2xl sm:rounded-3xl p-4 relative border border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] order-1 lg:order-2">
                 
-                <div class="flex flex-row justify-between items-center gap-2 mb-3 pb-2 border-b border-blue-500/20">
-                    <span id="mission-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40 flex items-center gap-1.5">
-                        <i class="fa-solid fa-compass text-blue-400"></i> Mateo 4:18-20
+                <div class="flex flex-row justify-between items-center gap-2 mb-2 pb-2 border-b border-amber-500/20">
+                    <span id="redil-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        Nivel 1 de 40
                     </span>
                     
-                    <div class="text-right">
-                        <span id="level-indicator" class="text-[11px] sm:text-xs font-extrabold text-blue-300 uppercase tracking-wider block">
-                            Nivel 1 de 40
-                        </span>
-                        <span id="group-indicator" class="text-[10px] sm:text-[11px] text-blue-200/70 font-semibold italic block">
-                            El Llamado al Mar de Galilea
-                        </span>
-                    </div>
-                </div>
-
-                <!-- BARRA DE PROGRESO -->
-                <div class="w-full bg-stone-950/80 rounded-full h-2.5 sm:h-3 border border-blue-500/30 overflow-hidden mb-4">
-                    <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-blue-500 transition-all duration-500 rounded-full" style="width: 1%"></div>
-                </div>
-
-                <!-- PREGUNTA -->
-                <h2 id="question-text" class="text-sm sm:text-xl font-bold text-sky-100 mb-3 sm:mb-4 leading-relaxed font-cinzel text-center min-h-[50px] sm:min-h-[70px] flex items-center justify-center">
-                    Cargando misión...
-                </h2>
-
-                <div class="flex justify-center mb-3">
-                    <button onclick="readCurrentQuestion()" class="text-[11px] sm:text-xs text-sky-300/80 hover:text-sky-200 bg-blue-900/30 px-3 py-1 rounded-full border border-blue-700/40 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-play text-sky-400"></i> Escuchar Pregunta
+                    <button onclick="hintSheep()" class="text-[11px] sm:text-xs bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 font-bold px-3 py-1 rounded-xl border border-amber-600/50 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-lightbulb text-yellow-400"></i> Pista
                     </button>
                 </div>
 
-                <!-- OPCIONES -->
-                <div id="options-container" class="space-y-2 sm:space-y-3 mb-3 sm:mb-5"></div>
+                <h2 id="instruction-text" class="text-xs sm:text-sm font-bold text-amber-100 mb-2 font-cinzel text-center">
+                    Encuentra las ovejas perdidas con cinta dorada ⭐
+                </h2>
 
-                <!-- RETROALIMENTACION BIBLICA Y CONTROL DE AVANCE -->
-                <div id="feedback-box" class="hidden rounded-xl p-3 sm:p-4 text-center border backdrop-blur-md transition-all"></div>
+                <!-- PASTIZAL DE JUEGO -->
+                <div id="game-pasture"></div>
 
-                <div class="mt-3 text-center">
-                    <p class="text-[10px] sm:text-[11px] text-sky-200/60 flex items-center justify-center gap-1 italic">
-                        <i class="fa-solid fa-bolt text-yellow-400"></i> ¡Responde bien para desatar Rayos Shock directos! ⚡
-                    </p>
+                <!-- ALERTA DE RECOMPENSA -->
+                <div id="feedback-message" class="hidden absolute inset-0 bg-black/85 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center text-center p-4 z-30">
+                    <i class="fa-solid fa-bolt text-5xl text-yellow-400 mb-2 animate-bounce"></i>
+                    <h3 id="feedback-title" class="text-xl font-black text-yellow-300 font-cinzel">¡OVEJA SALVADA!</h3>
+                    <p id="feedback-desc" class="text-xs text-stone-200 mt-1">+1 Oveja llevada al Redil Protegido ⭐</p>
                 </div>
 
+            </section>
+
+            <!-- REDIL DERECHO DE OVEJAS RESCATADAS (HASTA 100) -->
+            <section class="lg:col-span-3 glass-card rounded-2xl sm:rounded-3xl p-3 border border-amber-500/40 order-3 flex flex-col items-center">
+                <div class="w-full flex justify-between items-center mb-2 pb-1.5 border-b border-amber-500/20 text-center">
+                    <h3 class="font-cinzel text-amber-300 font-bold text-xs uppercase flex items-center gap-1">
+                        <i class="fa-solid fa-fence text-amber-400"></i> Redil Protegido
+                    </h3>
+                    <span id="rescued-count" class="text-xs font-black text-yellow-300">0 / 100</span>
+                </div>
+
+                <div id="rescued-fold" class="p-2 flex flex-wrap content-start justify-center gap-1 max-h-[360px] overflow-y-auto"></div>
             </section>
 
         </main>
 
         <!-- FOOTER -->
-        <footer class="w-full text-center py-2.5 bg-black/90 border-t border-blue-950 text-blue-200/50 text-[10px] sm:text-xs z-10">
-            Pescadores de Hombres &copy; Shock 99.5 FM — Producido para <span class="text-yellow-400 font-bold">Theos Logos</span>
+        <footer class="w-full text-center py-2.5 bg-black/90 border-t border-amber-950 text-amber-200/50 text-[10px] sm:text-xs z-10">
+            Pequeños Exploradores Shock &copy; Shock 99.5 FM — Producido para <span class="text-yellow-400 font-bold">Theos Logos</span>
         </footer>
 
     </div>
 
-    <!-- MODAL TROFEO FINAL -->
-    <div id="trophy-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
-        <div class="max-w-md w-full glass-card rounded-3xl p-5 sm:p-8 text-center border-2 border-yellow-400/80 shadow-[0_0_80px_rgba(255,215,0,0.6)] relative overflow-hidden">
-            <div class="relative z-10 flex flex-col items-center">
-                <div class="inline-block p-3 sm:p-4 rounded-full bg-yellow-500/10 border-2 border-yellow-400/50 mb-2 animate-bounce">
-                    <i class="fa-solid fa-trophy text-4xl sm:text-5xl text-yellow-400"></i>
-                </div>
-
-                <h3 class="text-amber-200 text-[10px] sm:text-xs uppercase font-extrabold tracking-widest mb-1">¡GRAN COMISIÓN CUMPLIDA!</h3>
-                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 font-cinzel">Pescador de Hombres Fiel</h2>
-
-                <div id="trophy-logo-container" class="my-3 p-3 w-full rounded-2xl bg-black/80 border border-yellow-500/40 flex items-center justify-center min-h-[90px]">
-                    <img src="theos.png" alt="Theos Logos" class="max-h-20 sm:max-h-28 object-contain" onError="renderFallbackTheosLogo('trophy-logo-container');">
-                </div>
-
-                <p class="text-stone-300 text-xs sm:text-sm mb-4 leading-relaxed">
-                    ¡Has completado los 40 niveles compartiendo el evangelio tal como Jesús comisionó a sus discípulos!
-                </p>
-
-                <div class="w-full space-y-2">
-                    <button onclick="resetAndPlayAgain()" class="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg">
-                        <i class="fa-solid fa-rotate-right mr-1.5"></i> Volver a Jugar
-                    </button>
-                    <button onclick="closeTrophyModal()" class="w-full py-2.5 px-5 rounded-xl bg-stone-900 text-sky-300 font-bold text-xs border border-blue-500/30">
-                        <i class="fa-solid fa-eye mr-1.5"></i> Ver Ruta de Misión
-                    </button>
-                </div>
+    <!-- MODAL DE PASAJE BÍBLICO AL COMPLETAR CADA NIVEL -->
+    <div id="bible-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
+        <div class="max-w-md w-full glass-card rounded-3xl p-6 text-center border-2 border-amber-400/80 shadow-[0_0_60px_rgba(245,158,11,0.6)] flex flex-col items-center">
+            
+            <div class="p-3 rounded-full bg-amber-500/20 border border-amber-400/50 mb-3">
+                <i class="fa-solid fa-book-bible text-4xl text-amber-300"></i>
             </div>
+
+            <h3 id="bible-redil-title" class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">¡NIVEL COMPLETADO!</h3>
+            <h2 class="text-xl font-bold text-white font-cinzel mb-3">El Dios que nos Rescata</h2>
+
+            <div class="bg-black/60 p-4 rounded-2xl border border-amber-500/30 mb-4 text-left w-full">
+                <p id="bible-verse" class="text-xs sm:text-sm text-yellow-200 font-semibold italic mb-2 leading-relaxed"></p>
+                <p id="bible-explanation" class="text-[11px] sm:text-xs text-stone-300 leading-relaxed"></p>
+            </div>
+
+            <button id="close-bible-btn" onclick="closeBibleModalAndContinue()" disabled class="w-full py-3 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed">
+                <i class="fa-solid fa-volume-high mr-1.5 animate-pulse"></i> Escuchando Reflexión...
+            </button>
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL -->
+    <!-- TROPHY MODAL FINAL (100 OVEJAS EN NIVEL 40) -->
+    <div id="trophy-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
+        <div class="max-w-md w-full glass-card rounded-3xl p-6 text-center border-2 border-yellow-400/80 shadow-[0_0_80px_rgba(255,215,0,0.6)] flex flex-col items-center">
+            <div class="inline-block p-4 rounded-full bg-yellow-500/10 border-2 border-yellow-400/50 mb-2 animate-bounce">
+                <i class="fa-solid fa-trophy text-5xl text-yellow-400"></i>
+            </div>
+            <h3 class="text-amber-200 text-xs font-bold tracking-widest uppercase">¡MISIÓN CUMPLIDA!</h3>
+            <h2 class="text-2xl font-bold text-white font-cinzel mb-2">100 Ovejas Rescatadas</h2>
+            
+            <div id="trophy-logo-container" class="my-3 p-3 w-full rounded-2xl bg-black/80 border border-yellow-500/40 flex items-center justify-center">
+                <img src="theos.png" alt="Theos Logos" class="max-h-24 object-contain" onError="renderFallbackTheosLogo('trophy-logo-container');">
+            </div>
+
+            <p class="text-xs sm:text-sm text-stone-300 mb-4 leading-relaxed">
+                ¡Has superado victoriosamente los 40 niveles y rescatado a las 100 ovejas perdidas llevándolas al Redil Protegido de Dios!
+            </p>
+
+            <button onclick="resetAndPlayAgain()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-black uppercase text-xs shadow-lg">
+                <i class="fa-solid fa-rotate-right mr-1.5"></i> Volver a Jugar
+            </button>
+        </div>
+    </div>
+
     <script>
+        // 40 PASAJES BÍBLICOS COMPLETOS CON CITAS Y EXPLICACIONES FLUIDAS PARA VOZ
+        const bibleVersesDB = [
+            { verse: 'Lucas 19:10 — "Porque el Hijo del Hombre vino a buscar y a salvar lo que se había perdido."', explanation: "Jesús vino a buscarnos con un amor inagotable para rescatarnos de todo peligro." },
+            { verse: 'Juan 10:11 — "Yo soy el buen pastor; el buen pastor su vida da por las ovejas."', explanation: "Jesús cuida de nosotros de manera única y entregó su vida por nuestra protección." },
+            { verse: 'Salmos 23:1 — "Jehová es mi pastor; nada me faltará."', explanation: "Al confiar en Dios como nuestro Guía, Él suplirá todo lo que necesitamos en paz." },
+            { verse: 'Lucas 15:4 — "¿Qué hombre de vosotros, teniendo cien ovejas, si pierde una de ellas, no va tras la que se perdió?"', explanation: "Cada persona es infinitamente valiosa para Dios; Él nunca te dejará olvidado." },
+            { verse: 'Lucas 15:7 — "Habrá más gozo en el cielo por un pecador que se arrepiente..."', explanation: "El cielo celebra con gran alegría cada vez que alguien vuelve a los brazos de Dios." },
+            { verse: '1 Pedro 2:25 — "Erais como ovejas descarriadas, pero ahora habéis vuelto al Pastor de vuestras almas."', explanation: "Aunque nos desviemos, la gracia de Dios siempre está lista para traernos de vuelta." },
+            { verse: 'Juan 10:27 — "Mis ovejas oyen mi voz, y yo las conozco, y me siguen."', explanation: "Escuchar y seguir la voz de Dios nos libra de caer en las trampas del enemigo." },
+            { verse: 'Juan 10:28 — "Y les doy vida eterna; y no perecerán jamás, ni nadie las arrebatará de mi mano."', explanation: "Nada en el mundo puede separarte de la poderosa mano protectora del Señor." },
+            { verse: 'Isaías 53:6 — "Todos nosotros nos descarriamos como ovejas; mas Jehová cargó en él el pecado de todos."', explanation: "Jesús tomó nuestras cargas para abrirnos camino seguro a la vida eterna." },
+            { verse: 'Isaías 40:11 — "Como pastor apacentará su rebaño; en su brazo llevará los corderos."', explanation: "Dios trata a los más pequeños y vulnerables con extrema ternura y cariño." },
+            { verse: 'Ezequiel 34:16 — "Yo buscaré la perdida, y haré volver la amedrentada; vendaré la perniquebrada."', explanation: "Dios restaura nuestros corazones lastimados y nos llena de nueva fortaleza." },
+            { verse: 'Salmos 34:18 — "Cerca está Jehová de los quebrantados de corazón; y salva a los contritos de espíritu."', explanation: "Cuando enfrentas momentos difíciles, la reconfortante presencia de Dios te abraza." },
+            { verse: 'Mateo 11:28 — "Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar."', explanation: "Entrega tus angustias a Dios; Él te dará el verdadero descanso del alma." },
+            { verse: 'Juan 3:16 — "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito."', explanation: "El amor de Dios es el regalo rescate más grandioso de la historia." },
+            { verse: 'Romanos 8:31 — "Si Dios es por nosotros, ¿quién contra nosotros?"', explanation: "Caminando con Dios a nuestro lado no hay gigante ni peligro que nos pueda vencer." },
+            { verse: 'Romanos 5:8 — "Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros."', explanation: "El amor de Dios es incondicional; Él nos amó desde antes de que le conociéramos." },
+            { verse: 'Salmos 23:6 — "Ciertamente el bien y la misericordia me seguirán todos los días de mi vida."', explanation: "La bondad y fidelidad del Señor acompañan cada uno de tus pasos." },
+            { verse: 'Salmos 27:1 — "El Señor es mi luz y mi salvación; ¿de quién temeré?"', explanation: "La luz celestial de Dios disipa toda oscuridad y ahuyenta cualquier temor." },
+            { verse: 'Jeremías 33:3 — "Clama a mí, y yo te responderé, y te enseñaré cosas grandes y ocultas."', explanation: "Dios escucha cada oración y te revelará sus maravillosos propósitos." },
+            { verse: 'Proverbios 18:10 — "Torre fuerte es el nombre de Jehová; a él correrá el justo, y será levantado."', explanation: "El nombre del Señor es un refugio inexpugnable donde siempre estarás seguro." },
+            { verse: 'Salmos 91:1 — "El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente."', explanation: "Vivir cerca de Dios nos mantiene bajo su sombra protectora a cada instante." },
+            { verse: 'Salmos 56:3 — "En el día que temo, yo en ti confío."', explanation: "La fe firme en Dios es el mejor escudo para superar momentos de incertidumbre." },
+            { verse: 'Salmos 17:8 — "Guárdame como a la niña de tus ojos; escóndeme bajo la sombra de tus alas."', explanation: "Para Dios eres su tesoro más preciado y te protege con absoluta ternura." },
+            { verse: '2 Pedro 1:2 — "Gracia y paz os sean multiplicadas en el conocimiento de Dios."', explanation: "Entre más conocemos a Dios, más abundan la gracia y la tranquilidad en nuestro corazón." },
+            { verse: '1 Tesalonicenses 5:23 — "Y el mismo Dios de paz os santifique por completo; y todo vuestro ser sea guardado."', explanation: "Dios te sostiene y guarda todo tu ser limpio y protegido." },
+            { verse: 'Salmos 121:7 — "Jehová te guardará de todo mal; él guardará tu alma."', explanation: "Dios vela por ti de noche y de día librándote de todo mal." },
+            { verse: 'Salmos 121:8 — "Jehová guardará tu salida y tu entrada desde ahora y para siempre."', explanation: "Cada viaje o paso que des está bajo la atenta mirada de tu Creador." },
+            { verse: 'Isaías 55:6 — "Buscad a Jehová mientras puede ser hallado, llamadle en tanto que está cercano."', explanation: "Buscar a Dios hoy es la mejor decisión que podemos tomar en nuestra vida." },
+            { verse: 'Proverbios 22:6 — "Instruye al niño en su camino, y aun cuando fuere viejo no se apartará de él."', explanation: "Aprender las enseñanzas bíblicas nos da sabiduría para toda la vida." },
+            { verse: 'Salmos 119:105 — "Lámpara es a mis pies tu palabra, y lumbrera a mi camino."', explanation: "La Palabra de Dios nos alumbra para tomar siempre decisiones correctas." },
+            { verse: 'Filipenses 4:13 — "Todo lo puedo en Cristo que me fortalece."', explanation: "Con la fuerza que Cristo te da, no existen metas inalcanzables." },
+            { verse: 'Isaías 41:10 — "No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios."', explanation: "Dios te toma de la mano derecha y te sostiene en todo momento." },
+            { verse: '1 Corintios 13:4 — "El amor es sufrido, es benigno; el amor no tiene envidia."', explanation: "El amor de Dios nos enseña a tratar a todos con bondad y respeto." },
+            { verse: 'Mateo 22:37 — "Amarás al Señor tu Dios con todo tu corazón, y a tu prójimo como a ti mismo."', explanation: "Amar a Dios y ayudar a nuestro prójimo son las bases de una vida feliz." },
+            { verse: 'Mateo 5:8 — "Bienaventurados los de limpio corazón, porque ellos verán a Dios."', explanation: "Mantener intenciones puras nos acerca cada día más a la presencia de Dios." },
+            { verse: 'Mateo 18:20 — "Porque donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."', explanation: "Cuando nos unimos a buscar a Dios, su gloriosa presencia llena el lugar." },
+            { verse: 'Santiago 4:7 — "Someteos, pues, a Dios; resistid al diablo, y huirá de vosotros."', explanation: "Obedecer a Dios nos hace victoriosos frente a cualquier tentación." },
+            { verse: '2 Pedro 3:9 — "El Señor no retarda su promesa, según algunos la tienen por tardanza..."', explanation: "Las promesas de Dios siempre se cumplen en su tiempo perfecto." },
+            { verse: 'Apocalipsis 3:20 — "He aquí, yo estoy a la puerta y llamo; si alguno oye mi voz y abre la puerta, entraré a él."', explanation: "Jesús toca la puerta de nuestro corazón para darnos vida y bendición." },
+            { verse: 'Apocalipsis 22:17 — "Y el Espíritu y la Esposa dicen: Ven. Y el que oye, diga: Ven."', explanation: "Dios nos invita a disfrutar libremente de las aguas de la vida eterna." }
+        ];
+
         function renderFallbackShockLogo(containerId, height = 48) {
             const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = `
-                <div class="flex items-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-blue-600 px-3 py-1.5 rounded-xl border border-sky-400/60 shadow-[0_0_15px_rgba(14,165,233,0.7)]">
-                    <i class="fa-solid fa-bolt text-yellow-300 text-lg animate-pulse"></i>
+                <div class="flex items-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-amber-600 px-3 py-1.5 rounded-xl border border-amber-400/60 shadow-[0_0_15px_rgba(220,38,38,0.7)]">
+                    <i class="fa-solid fa-bolt text-yellow-300 text-lg"></i>
                     <div class="flex flex-col text-left leading-none">
                         <span class="font-black italic text-white text-sm">SHOCK</span>
                         <span class="font-bold text-yellow-300 text-[9px]">99.5 FM</span>
@@ -308,59 +396,92 @@
             `;
         }
 
-        // 40 PREGUNTAS ÚNICAS BASADAS EN MATEO 4:18-20 Y LA GRAN COMISIÓN
-        const questionsDB = [
-            { question: "1. ¿Junto a qué mar caminaba Jesús cuando vio a dos hermanos, Simón llamado Pedro y Andrés?", options: ["Mar Muerto", "Mar de Galilea", "Mar Rojo", "Mar Mediterráneo"], correct: 1, verse: "Mateo 4:18", verseText: "Andando Jesús junto al mar de Galilea, vio a dos hermanos, Simón, llamado Pedro, y Andrés su hermano, que echaban la red en el mar; porque eran pescadores." },
-            { question: "2. ¿Qué oficio tenían Simón Pedro y Andrés antes de ser llamados por Jesús?", options: ["Carpinteros", "Pescadores", "Agricultores", "Pastores"], correct: 1, verse: "Mateo 4:18", verseText: "...que echaban la red en el mar; porque eran pescadores." },
-            { question: "3. ¿Qué les dijo Jesús a Pedro y Andrés al llamarlos a seguirle?", options: ["Venid en pos de mí, y os haré pescadores de hombres", "Dejad vuestras redes y construyan casas", "Vended todo lo que tenéis y viajen lejos", "Preparen el barco para pescar más peces"], correct: 0, verse: "Mateo 4:19", verseText: "Y les dijo: Venid en pos de mí, y os haré pescadores de hombres." },
-            { question: "4. ¿Qué hicieron instantáneamente Pedro y Andrés al escuchar el llamado de Jesús?", options: ["Esperaron al día siguiente", "Dejaron al instante las redes y le siguieron", "Le pidieron más tiempo", "Preguntaron a sus padres"], correct: 1, verse: "Mateo 4:20", verseText: "Ellos entonces, dejando al instante las redes, le siguieron." },
-            { question: "5. ¿Cuál es la Gran Comisión que Jesús dio a sus discípulos antes de partir?", options: ["Quedarse en Jerusalén tranquilos", "Id por todo el mundo y predicad el evangelio a toda criatura", "Construir templos grandes", "Estudiar la ley antigua"], correct: 1, verse: "Marcos 16:15", verseText: "Y les dijo: Id por todo el mundo y predicad el evangelio a toda criatura." },
-            { question: "6. Según Mateo 28:19, ¿qué debemos hacer con todas las naciones?", options: ["Enseñarles ciencias", "Hacer discípulos bautizándolos en el nombre del Padre, del Hijo y del Espíritu Santo", "Conquistar sus tierras", "Cobrar tributos"], correct: 1, verse: "Mateo 28:19", verseText: "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo." },
-            { question: "7. ¿Quiénes eran los otros dos hermanos pescadores que Jesús llamó inmediatamente después en la barca?", options: ["Jacobo y Juan, hijos de Zebedeo", "Felipe y Bartolomé", "Tomás y Mateo", "Santiago y Judas"], correct: 0, verse: "Mateo 4:21", verseText: "Pasando de allí, vio a otros dos hermanos, Jacobo hijo de Zebedeo, y Juan su hermano, en la barca con Zebedeo su padre, remendando sus redes; y los llamó." },
-            { question: "8. ¿Qué promesa dio Jesús a sus discípulos al encomendarles la gran comisión en Mateo 28:20?", options: ["Tendrán riquezas materiales", "He aquí yo estoy con vosotros todos los días, hasta el fin del mundo", "Nadie se opondrá a su mensaje", "Nunca experimentarán cansancio"], correct: 1, verse: "Mateo 28:20", verseText: "Enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo." },
-            { question: "9. ¿Qué poder prometió Jesús que recibirían los discípulos al descender el Espíritu Santo para ser testigos?", options: ["Poder político", "Poder para hacer milagros egoístas", "Recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo", "Poder para gobernar imperios"], correct: 2, verse: "Hechos 1:8", verseText: "Pero recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo, y me seréis testigos en Jerusalén, en toda Judea, en Samaria, y hasta lo último de la tierra." },
-            { question: "10. ¿Cómo demostró Pedro su valentía al predicar el día de Pentecostés?", options: ["Huyendo de la multitud", "Predicando con denuedo el evangelio de salvación donde se convirtieron miles", "Permaneciendo en silencio", "Cerrando el templo"], correct: 1, verse: "Hechos 2:41", verseText: "Así que, los que recibieron su palabra fueron bautizados; y se añadieron aquel día como tres mil personas." },
-            { question: "11. ¿Qué herramienta espiritual menciona Efesios que es la espada del Espíritu?", options: ["Una espada de hierro", "La Palabra de Dios", "Los decretos humanos", "La elocuencia"], correct: 1, verse: "Efesios 6:17", verseText: "Y tomad el yelmo de la salvación, y la espada del Espíritu, que es la palabra de Dios." },
-            { question: "12. ¿Qué representa la red de los pescadores en la misión que Jesús dio?", options: ["Una trampa peligrosa", "El alcance del evangelio para rescatar almas para el Reino de los Cielos", "Un instrumento de pesca ordinario", "Una cerca de seguridad"], correct: 1, verse: "Mateo 13:47", verseText: "Asimismo el reino de los cielos es semejante a una red, que echada en el mar, atrapa toda clase de peces." },
-            { question: "13. ¿Cuál debe ser nuestra actitud al compartir las buenas nuevas de salvación?", options: ["Vergüenza", "Temor al qué dirán", "Id con gozo y valentía predicando la paz", "Imponer por la fuerza"], correct: 2, verse: "Romanos 10:15", verseText: "¿Y cómo predicarán si no fueren enviados? Como está escrito: ¡Qué hermosos son los pies de los que anuncian la paz, de los que anuncian buenas nuevas!" },
-            { question: "14. ¿Qué dijo Pedro ante las autoridades cuando le prohibieron hablar de Jesús?", options: ["Es mejor obedecer a Dios antes que a los hombres", "Dejaré de predicar", "Hacer silencio por prudencia", "Escapar de la ciudad"], correct: 0, verse: "Hechos 5:29", verseText: "Respondiendo Pedro y los apóstoles, dijeron: Es necesario obedecer a Dios antes que a los hombres." },
-            { question: "15. ¿Qué significa ser sal de la tierra y luz del mundo según Jesús?", options: ["Iluminar casas y salar comidas", "Reflejar el amor de Dios e influenciar al mundo con principios del evangelio", "Vivir apartados de la sociedad", "Ocultar la fe en público"], correct: 1, verse: "Mateo 5:14", verseText: "Vosotros sois la luz del mundo; una ciudad asentada sobre un monte no se puede esconder." },
-            { question: "16. ¿Qué libro de la Biblia detalla el inicio de la misión de evangelizar el mundo por los apóstoles?", options: ["Génesis", "Hechos de los Apóstoles", "Apocalipsis", "Levítico"], correct: 1, verse: "Hechos 1:1", verseText: "El primer tratado, oh Teófilo, hube hecho acerca de todas las cosas que Jesús comenzó a hacer y a enseñar..." },
-            { question: "17. ¿A qué nos invita Romanos 1:16 respecto al evangelio de Cristo?", options: ["A avergonzarnos de él", "A no avergonzarnos, porque es poder de Dios para salvación", "A guardarlo en secreto", "A predicarlo solo a familiares"], correct: 1, verse: "Romanos 1:16", verseText: "Porque no me avergüenzo del evangelio, porque es poder de Dios para salvación a todo aquel que cree..." },
-            { question: "18. ¿Qué hizo Andrés inmediatamente después de encontrar al Mesías?", options: ["Se fue a dormir", "Buscó a su hermano Simón Pedro y le llevó a Jesús", "Guardó el secreto", "Vendió sus redes"], correct: 1, verse: "Juan 1:41", verseText: "Este halló primero a su hermano Simón, y le dijo: Hemos hallado al Mesías (que traducido es el Cristo)." },
-            { question: "19. ¿Cuál es el propósito principal por el cual brillan nuestras luces delante de los hombres?", options: ["Para recibir aplausos", "Para que vean nuestras buenas obras y glorifiquen a vuestro Padre que está en los cielos", "Para demostrar superioridad", "Para destacar en la comunidad"], correct: 1, verse: "Mateo 5:16", verseText: "Así alumbre vuestra luz delante de los hombres, para que vean vuestras buenas obras, y glorifiquen a vuestro Padre que está en los cielos." },
-            { question: "20. ¿Qué representa el mar en la metáfora de Pescadores de Hombres?", options: ["El mundo lleno de personas que necesitan escuchar el mensaje de salvación", "Un obstáculo intransitable", "Un lugar prohibido", "Un sitio de descanso"], correct: 0, verse: "Mateo 4:19", verseText: "Y les dijo: Venid en pos de mí, y os haré pescadores de hombres." },
-            { question: "21. ¿Qué actitud tenía el apóstol Pablo al cumplir su ministerio de evangelización?", options: ["Desinterés por las almas", "Acabaría su carrera con gozo guardando la fe y predicando sin cesar", "Buscaba fama personal", "Trabajaba por obligación"], correct: 1, verse: "2 Timoteo 4:7", verseText: "He peleado la buena batalla, he acabado la carrera, he guardado la fe." },
-            { question: "22. ¿Quiénes son llamados a cumplir la Gran Comisión hoy en día?", options: ["Únicamente los pastores", "Solo los misioneros antiguos", "Todo creyente que ha recibido a Cristo en su corazón", "Nadie en la actualidad"], correct: 2, verse: "Mateo 28:19", verseText: "Por tanto, id, y haced discípulos a todas las naciones..." },
-            { question: "23. ¿Qué herramienta de comunicación moderna nos ayuda hoy a cumplir con llevar el evangelio a todo el mundo?", options: ["Los medios de difusión masiva y la radio como Shock 99.5 FM", "Ninguna tecnología", "Solamente pergaminos antiguos", "Dispositivos bloqueados"], correct: 0, verse: "Marcos 16:15", verseText: "Id por todo el mundo y predicad el evangelio a toda criatura." },
-            { question: "24. ¿Qué respondió Pedro cuando Jesús preguntó: '¿Queréis vosotros también iros?'", options: ["Señor, ¿a quién iremos? Tú tienes palabras de vida eterna", "Nos iremos con los demás", "No lo sabemos", "Tenemos miedo"], correct: 0, verse: "Juan 6:68", verseText: "Simón Pedro le respondió: Señor, ¿a quién iremos? Tú tienes palabras de vida eterna." },
-            { question: "25. ¿Qué recompensa prometió Jesús a quienes dejan todo por causa de su nombre y del evangelio?", options: ["Pérdida total", "Recibir cien veces más en este tiempo y vida eterna en el venidero", "Dificultades eternas", "Ningún beneficio"], correct: 1, verse: "Marcos 10:29-30", verseText: "...no hay ninguno que haya dejado casa, o hermanos... por causa de mi nombre y del evangelio, que no reciba cien veces más ahora..." },
-            { question: "26. ¿Qué nos enseña la parábola de la red barredera sobre el llamado a todas las personas?", options: ["Que el mensaje debe ser llevado a toda persona sin distinción", "Que debemos excluir a la gente", "Que la pesca es difícil", "Que el mar es peligroso"], correct: 0, verse: "Mateo 13:47", verseText: "Asimismo el reino de los cielos es semejante a una red, que echada en el mar, atrapa toda clase de peces." },
-            { question: "27. ¿Qué instrucción dio Jesús sobre cómo entrar a las aldeas a predicar?", options: ["Con ira y juicio", "Paz sea a esta casa", "Ignorando a la gente", "Exigiendo dinero"], correct: 1, verse: "Lucas 10:5", verseText: "En cualquier casa donde entréis, primeramente decid: Paz sea a esta casa." },
-            { question: "28. ¿Qué representa la barca de Pedro en el evangelismo?", options: ["Un medio para navegar y llevar la palabra a las multitudes", "Un objeto sin valor", "Una cárcel", "Una carga pesada"], correct: 0, verse: "Lucas 5:3", verseText: "Y entrando en una de aquellas barcas, la cual era de Simón, le rogó que la apartase de tierra un poco; y sentándose, enseñaba desde la barca a la multitud." },
-            { question: "29. ¿Qué debemos hacer cuando encontramos el tesoro del reino de los cielos?", options: ["Esconderlo y callar", "Compartirlo con gozo anunciando las buenas nuevas a otros", "Olvidarlo", "Desperdiciarlo"], correct: 1, verse: "Mateo 13:44", verseText: "Además, el reino de los cielos es semejante a un tesoro escondido en un campo... y de gozo va y vende todo lo que tiene, y compra aquel campo." },
-            { question: "30. ¿Qué dijo el apóstol Pablo sobre anunciar el evangelio en 1 Corintios 9:16?", options: ["¡Ay de mí si no anunciare el evangelio!", "Es opcional predicar", "Nadie está obligado", "Es mejor callar"], correct: 0, verse: "1 Corintios 9:16", verseText: "Pues si anuncio el evangelio, no tengo por qué gloriarme; porque me es impuesta necesidad; y ¡ay de mí si no anunciare el evangelio!" },
-            { question: "31. ¿Cuál es el mensaje central que Pedro predicó con poder en el Nuevo Testamento?", options: ["La salvación y el perdón de pecados a través de Jesucristo", "Filosofía humana", "Leyes antiguas de comercio", "Costumbres temporales"], correct: 0, verse: "Hechos 4:12", verseText: "Y en ningún otro hay salvación; porque no hay otro nombre bajo el cielo, dado a los hombres, en que podamos ser salvos." },
-            { question: "32. ¿Qué actitud tenía la iglesia primitiva tras recibir la comisión de Jesús?", options: ["Miedo constante", "Y todos los días, en el templo y por las casas, no cesaban de enseñar y predicar a Jesucristo", "Se dispersaron sin propósito", "Cerraron las puertas"], correct: 1, verse: "Hechos 5:42", verseText: "Y todos los días, en el templo y por las casas, no cesaban de enseñar y predicar a Jesucristo." },
-            { question: "33. ¿Qué dice Proverbios 11:30 acerca del ganador de almas?", options: ["El que gana almas es sabio", "El que gana almas pierde su tiempo", "La sabiduría no importa", "El trabajo es en vano"], correct: 0, verse: "Proverbios 11:30", verseText: "El fruto del justo es árbol de vida; y el que gana almas es sabio." },
-            { question: "34. ¿Qué nos recuerda el ejemplo de Felipe al evangelizar al etíope en el camino?", options: ["Que debemos estar dispuestos a guiar a otros hacia Cristo cuando el Espíritu nos guía", "Que debemos viajar solos", "Que no se debe hablar con extraños", "Que la lectura no sirve"], correct: 0, verse: "Hechos 8:35", verseText: "Entonces Felipe, abriendo su boca, y comenzando desde esta escritura, le anunció el evangelio de Jesús." },
-            { question: "35. ¿Por qué es urgente la gran comisión de llevar el evangelio al mundo entero?", options: ["Porque la mies es mucha y los obreros pocos", "Porque hay mucho tiempo libre", "Porque es un requisito escolar", "Porque no hay otra actividad"], correct: 0, verse: "Mateo 9:37", verseText: "Entonces dijo a sus discípulos: A la verdad la mies es mucha, más los obreros pocos." },
-            { question: "36. ¿Qué ocurre en el cielo cuando un pecador se arrepiente y es alcanzado por el evangelio?", options: ["Hay tristeza", "Hay gozo delante de los ángeles de Dios", "No pasa nada", "Silencio absoluto"], correct: 1, verse: "Lucas 15:10", verseText: "Así os digo que hay gozo delante de los ángeles de Dios por un pecador que se arrepiente." },
-            { question: "37. ¿Qué nos anima Isaías 52:7 sobre los mensajeros del evangelio?", options: ["¡Cuán hermosos son sobre los montes los pies del que trae alegres nuevas!", "¡Qué cansados están los mensajeros!", "El camino es muy largo", "Nadie escucha el mensaje"], correct: 0, verse: "Isaías 52:7", verseText: "¡Cuán hermosos son sobre los montes los pies del que trae alegres nuevas, del que publica la paz, del que trae nuevas del bien, del que publica salvación..." },
-            { question: "38. ¿Cuál es el compromiso de un verdadero discípulo de Jesús según su llamado?", options: ["Seguirle diariamente y pescar hombres para su reino", "Buscar comodidades personales", "Alejarse de la gente", "Ignorar las enseñanzas"], correct: 0, verse: "Lucas 9:23", verseText: "Y decía a todos: Si alguno quiere venir en pos de mí, niéguese a sí mismo, tome su cruz cada día, y sígame." },
-            { question: "39. ¿Qué nos garantiza Jesús al cumplir su mandato de llevar el evangelio?", options: ["Su presencia constante y respaldo eterno", "Soledad absoluta", "Falta de recursos", "Incertidumbre total"], correct: 0, verse: "Mateo 28:20", verseText: "...y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén." },
-            { question: "40. ¿Cuál debe ser nuestra respuesta final al mandato de ser Pescadores de Hombres?", options: ["Decir 'Heme aquí, envíame a mí'", "Quedarnos inactivos", "Esperar que otros lo hagan", "Ignorar el llamado"], correct: 0, verse: "Isaías 6:8", verseText: "Después oí la voz del Señor, que decía: ¿A quién enviaré, y quién irá por nosotros? Entonces respondí yo: Heme aquí, envíame a mí." }
-        ];
+        // VECTORS SVG INTERACTIVOS
+        const sheepSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                <ellipse cx="50" cy="55" rx="28" ry="20" fill="#ffffff" />
+                <circle cx="34" cy="45" r="10" fill="#f1f5f9" />
+                <circle cx="66" cy="45" r="10" fill="#f1f5f9" />
+                <circle cx="50" cy="38" r="12" fill="#ffffff" />
+                <ellipse cx="50" cy="50" rx="12" ry="10" fill="#334155" />
+                <circle cx="46" cy="48" r="2" fill="#ffffff" />
+                <circle cx="54" cy="48" r="2" fill="#ffffff" />
+                <rect x="38" y="70" width="5" height="12" rx="2" fill="#1e293b" />
+                <rect x="57" y="70" width="5" height="12" rx="2" fill="#1e293b" />
+            </svg>
+        `;
 
-        let currentIndex = 0;
+        const goatSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                <path d="M 36 28 Q 20 5 15 15 Q 26 22 36 34 Z" fill="#b45309" />
+                <path d="M 64 28 Q 80 5 85 15 Q 74 22 64 34 Z" fill="#b45309" />
+                <ellipse cx="50" cy="52" rx="18" ry="22" fill="#d97706" />
+                <ellipse cx="50" cy="42" rx="10" ry="12" fill="#f59e0b" />
+                <circle cx="45" cy="40" r="2" fill="#000" />
+                <circle cx="55" cy="40" r="2" fill="#000" />
+                <polygon points="50,62 44,78 56,78" fill="#fef3c7" />
+                <rect x="42" y="72" width="4" height="14" fill="#78350f" />
+                <rect x="54" y="72" width="4" height="14" fill="#78350f" />
+            </svg>
+        `;
+
+        const lionSilhouetteSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">
+                <circle cx="50" cy="40" r="22" fill="#000000" />
+                <circle cx="50" cy="42" r="14" fill="#050505" />
+                <ellipse cx="50" cy="65" rx="18" ry="20" fill="#000000" />
+                <path d="M 32 30 Q 20 20 30 10 Z" fill="#000000" />
+                <path d="M 68 30 Q 80 20 70 10 Z" fill="#000000" />
+                <rect x="38" y="80" width="6" height="15" rx="2" fill="#000000" />
+                <rect x="56" y="80" width="6" height="15" rx="2" fill="#000000" />
+            </svg>
+        `;
+
+        const wolfSilhouetteSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">
+                <polygon points="50,15 30,45 70,45" fill="#000000" />
+                <polygon points="32,25 20,5 38,18" fill="#000000" />
+                <polygon points="68,25 80,5 62,18" fill="#000000" />
+                <ellipse cx="50" cy="60" rx="16" ry="22" fill="#000000" />
+                <rect x="40" y="78" width="5" height="16" rx="2" fill="#000000" />
+                <rect x="55" y="78" width="5" height="16" rx="2" fill="#000000" />
+            </svg>
+        `;
+
+        const snakeSilhouetteSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">
+                <path d="M 20 70 Q 40 90 50 70 T 80 70 T 50 30 T 30 20" fill="none" stroke="#000000" stroke-width="12" stroke-linecap="round" />
+                <circle cx="30" cy="20" r="10" fill="#000000" />
+            </svg>
+        `;
+
+        const mountainSilhouetteSVG = `
+            <svg viewBox="0 0 100 100" class="w-12 h-12 sm:w-14 sm:h-14 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.2)]">
+                <polygon points="50,15 10,85 90,85" fill="#000000" />
+                <polygon points="70,35 45,85 95,85" fill="#111111" />
+            </svg>
+        `;
+
+        const rockSilhouetteSVG = `
+            <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.2)]">
+                <path d="M 20 70 L 30 40 L 60 30 L 85 50 L 75 80 L 30 85 Z" fill="#000000" />
+            </svg>
+        `;
+
+        const sheepPerLevelArr = [];
+        for (let lvl = 0; lvl < 40; lvl++) {
+            sheepPerLevelArr.push(lvl % 2 === 0 ? 2 : 3);
+        }
+
+        let currentLevel = 0;
         let maxUnlockedLevel = 0;
         let completedLevels = new Set();
+        let totalRescuedSheepCount = 0;
+        let levelRemainingSheep = 0;
+        let lostSheepIndexes = [];
         let isAudioEnabled = true;
-        let isAnsweringBlocked = false;
         let bestVoice = null;
 
-        // AL CARGAR: La ventana de narrativa inicia abierta, pero la voz NO suena automáticamente 
-        // hasta que el usuario toca el botón de "Escuchar Narración" o toca el icono de la Gran Comisión.
         window.addEventListener('DOMContentLoaded', () => {
             initAudio();
             loadNaturalVoice();
@@ -372,7 +493,7 @@
             const startBtn = document.getElementById('start-mission-btn');
             startBtn.disabled = true;
             startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2";
-            startBtn.innerHTML = `<i class="fa-solid fa-volume-high animate-pulse"></i> Narrando...`;
+            startBtn.innerHTML = `<i class="fa-solid fa-volume-high animate-pulse"></i> Narrando Reseña...`;
 
             const text1 = document.getElementById('narrative-text-1').innerText;
             const text2 = document.getElementById('narrative-text-2').innerText;
@@ -381,8 +502,8 @@
 
             speakText(fullNarrative, () => {
                 startBtn.disabled = false;
-                startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
-                startBtn.innerHTML = `<i class="fa-solid fa-bolt text-yellow-300"></i> ¡Comenzar la Misión!`;
+                startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-xs shadow-lg active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
+                startBtn.innerHTML = `<i class="fa-solid fa-play"></i> ¡Comenzar la Aventura!`;
             });
         }
 
@@ -396,53 +517,292 @@
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             document.getElementById('narrative-overlay').style.display = 'none';
             loadSavedProgress();
-            renderLevelGrid();
-            renderQuestion();
+            renderLevelsList();
+            renderRescuedFold();
+            loadLevel();
         }
 
         function loadSavedProgress() {
             try {
-                const savedMax = localStorage.getItem('pescadores_40_max');
-                const savedCompleted = localStorage.getItem('pescadores_40_completed');
+                const savedMax = localStorage.getItem('exploradores_40_max');
+                const savedCompleted = localStorage.getItem('exploradores_40_completed');
+                const savedSheep = localStorage.getItem('exploradores_40_sheep');
+
                 if (savedMax !== null) maxUnlockedLevel = parseInt(savedMax, 10);
                 if (savedCompleted !== null) completedLevels = new Set(JSON.parse(savedCompleted));
+                if (savedSheep !== null) totalRescuedSheepCount = parseInt(savedSheep, 10);
             } catch(e) {}
-            updateHUDScore();
+            updateHUD();
         }
 
         function saveProgress() {
             try {
-                localStorage.setItem('pescadores_40_max', maxUnlockedLevel);
-                localStorage.setItem('pescadores_40_completed', JSON.stringify(Array.from(completedLevels)));
+                localStorage.setItem('exploradores_40_max', maxUnlockedLevel);
+                localStorage.setItem('exploradores_40_completed', JSON.stringify(Array.from(completedLevels)));
+                localStorage.setItem('exploradores_40_sheep', totalRescuedSheepCount);
             } catch(e) {}
         }
 
-        function updateHUDScore() {
-            document.getElementById('star-score-hud').innerText = `${completedLevels.size} / 40`;
+        function updateHUD() {
+            document.getElementById('star-score-hud').innerText = `${totalRescuedSheepCount} / 100`;
+            document.getElementById('rescued-count').innerText = `${totalRescuedSheepCount} / 100`;
+            document.getElementById('redil-badge').innerText = `Nivel ${currentLevel + 1} de 40`;
         }
 
-        function confirmReset() {
-            if (confirm("¿Seguro que deseas reiniciar tu ruta de pescador de hombres y volver al Nivel 1?")) {
-                resetAndPlayAgain();
+        function renderRescuedFold() {
+            const fold = document.getElementById('rescued-fold');
+            if (!fold) return;
+            fold.innerHTML = '';
+            for (let i = 0; i < totalRescuedSheepCount; i++) {
+                const s = document.createElement('div');
+                s.className = 'p-0.5 animate-pulse';
+                s.innerHTML = sheepSVG;
+                fold.appendChild(s);
             }
         }
 
-        function resetAndPlayAgain() {
-            try {
-                localStorage.removeItem('pescadores_40_max');
-                localStorage.removeItem('pescadores_40_completed');
-            } catch(e) {}
-            maxUnlockedLevel = 0;
-            completedLevels.clear();
-            currentIndex = 0;
-            updateHUDScore();
-            document.getElementById('trophy-modal').classList.add('hidden');
-            renderLevelGrid();
-            renderQuestion();
+        function renderLevelsList() {
+            const container = document.getElementById('levels-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            for (let i = 0; i < 40; i++) {
+                const btn = document.createElement('button');
+                let state = 'locked';
+                if (completedLevels.has(i)) state = 'completed';
+                else if (i === currentLevel) state = 'current';
+                else if (i <= maxUnlockedLevel) state = 'bg-stone-800 text-amber-300 border-amber-500/40';
+
+                btn.className = `level-grid-btn ${state} border h-9 rounded-xl text-xs font-bold flex items-center justify-center`;
+                btn.innerText = i + 1;
+
+                if (i <= maxUnlockedLevel) {
+                    btn.onclick = () => {
+                        currentLevel = i;
+                        renderLevelsList();
+                        loadLevel();
+                    };
+                } else {
+                    btn.disabled = true;
+                }
+
+                container.appendChild(btn);
+            }
+
+            const percent = Math.round((completedLevels.size / 40) * 100);
+            document.getElementById('progress-percent').innerText = `${percent}%`;
         }
 
-        function closeTrophyModal() {
-            document.getElementById('trophy-modal').classList.add('hidden');
+        function loadLevel() {
+            updateHUD();
+            const pasture = document.getElementById('game-pasture');
+            if (!pasture) return;
+            pasture.innerHTML = '';
+            document.getElementById('feedback-message').classList.add('hidden');
+
+            const targetSheepInLevel = sheepPerLevelArr[currentLevel];
+            levelRemainingSheep = targetSheepInLevel;
+
+            const normalSheepCount = 4 + Math.floor(currentLevel / 5);
+            const goatCount = 2 + Math.floor(currentLevel / 8);
+            const predatorCount = 2 + Math.floor(currentLevel / 10);
+            
+            lostSheepIndexes = [];
+            while (lostSheepIndexes.length < targetSheepInLevel) {
+                const randIdx = Math.floor(Math.random() * (targetSheepInLevel + normalSheepCount));
+                if (!lostSheepIndexes.includes(randIdx)) {
+                    lostSheepIndexes.push(randIdx);
+                }
+            }
+
+            const obstacleCount = 2 + Math.floor(currentLevel / 10);
+            for (let i = 0; i < obstacleCount; i++) {
+                const obs = document.createElement('div');
+                const isMountain = Math.random() > 0.5;
+                obs.className = 'obstacle';
+                obs.style.left = `${10 + Math.random() * 80}%`;
+                obs.style.top = `${10 + Math.random() * 70}%`;
+                obs.innerHTML = isMountain ? mountainSilhouetteSVG : rockSilhouetteSVG;
+                pasture.appendChild(obs);
+            }
+
+            for (let i = 0; i < targetSheepInLevel + normalSheepCount; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'animal-btn';
+                btn.style.left = `${8 + Math.random() * 80}%`;
+                btn.style.top = `${12 + Math.random() * 72}%`;
+
+                if (lostSheepIndexes.includes(i)) {
+                    btn.innerHTML = `<div class="relative">${sheepSVG}<i class="fa-solid fa-ribbon text-yellow-400 text-xs absolute -top-1 -right-1 drop-shadow-[0_0_8px_rgba(250,204,21,1)]"></i></div>`;
+                    btn.onclick = (e) => foundLostSheep(e, btn);
+                } else {
+                    btn.innerHTML = sheepSVG;
+                    btn.onclick = () => wrongAnimal('sheep');
+                }
+                pasture.appendChild(btn);
+            }
+
+            for (let i = 0; i < goatCount; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'animal-btn';
+                btn.style.left = `${8 + Math.random() * 80}%`;
+                btn.style.top = `${12 + Math.random() * 72}%`;
+                btn.innerHTML = goatSVG;
+                btn.onclick = () => wrongAnimal('goat');
+                pasture.appendChild(btn);
+            }
+
+            const predatorTypes = ['wolf', 'lion', 'snake'];
+            for (let i = 0; i < predatorCount; i++) {
+                const pType = predatorTypes[i % predatorTypes.length];
+                const btn = document.createElement('div');
+                btn.className = 'animal-btn';
+                btn.style.left = `${8 + Math.random() * 80}%`;
+                btn.style.top = `${12 + Math.random() * 72}%`;
+
+                if (pType === 'wolf') btn.innerHTML = wolfSilhouetteSVG;
+                else if (pType === 'lion') btn.innerHTML = lionSilhouetteSVG;
+                else btn.innerHTML = snakeSilhouetteSVG;
+
+                btn.onclick = () => wrongAnimal(pType);
+                pasture.appendChild(btn);
+            }
+
+            speakText(`Nivel ${currentLevel + 1}. Encuentra las ${targetSheepInLevel} ovejas perdidas con cinta dorada.`);
+        }
+
+        function wrongAnimal(type) {
+            playErrorSound();
+            if (type === 'goat') {
+                speakText("¡Esa es una cabra, no es una oveja perdida! Sigue buscando.");
+            } else if (type === 'wolf') {
+                speakText("¡Cuidado explorador, ese es un lobo feroz!");
+            } else if (type === 'lion') {
+                speakText("¡Cuidado explorador, ese es un león peligroso!");
+            } else if (type === 'snake') {
+                speakText("¡Cuidado explorador, esa es una serpiente!");
+            } else {
+                speakText("Esa es una oveja del rebaño; busca la que tiene la cinta dorada.");
+            }
+        }
+
+        function foundLostSheep(event, element) {
+            playWinSound();
+
+            const rect = event.currentTarget.getBoundingClientRect();
+            const posX = rect.left + rect.width / 2;
+            const posY = rect.top + rect.height / 2;
+
+            triggerTargetedLightningStrike(posX, posY);
+            spawnCelebrationBurst(posX, posY);
+
+            element.style.pointerEvents = 'none';
+            element.style.opacity = '0.3';
+
+            totalRescuedSheepCount++;
+            levelRemainingSheep--;
+
+            saveProgress();
+            updateHUD();
+            renderRescuedFold();
+
+            if (levelRemainingSheep > 0) {
+                document.getElementById('feedback-title').innerText = "¡OVEJA RESCATADA!";
+                document.getElementById('feedback-desc').innerText = `+1 Oveja llevada al Redil. ¡Faltan ${levelRemainingSheep} en este nivel!`;
+                document.getElementById('feedback-message').classList.remove('hidden');
+
+                speakText(`¡Excelente! Rescataste una oveja. Te faltan ${levelRemainingSheep}.`, () => {
+                    setTimeout(() => {
+                        document.getElementById('feedback-message').classList.add('hidden');
+                    }, 1000);
+                });
+            } else {
+                if (!completedLevels.has(currentLevel)) {
+                    completedLevels.add(currentLevel);
+                }
+
+                if (currentLevel + 1 > maxUnlockedLevel && currentLevel + 1 < 40) {
+                    maxUnlockedLevel = currentLevel + 1;
+                }
+
+                saveProgress();
+                renderLevelsList();
+
+                document.getElementById('feedback-title').innerText = "¡NIVEL COMPLETADO!";
+                document.getElementById('feedback-desc').innerText = "¡Todas las ovejas del nivel están a salvo!";
+                document.getElementById('feedback-message').classList.remove('hidden');
+
+                speakText("¡Grandioso! Has rescatado a todas las ovejas perdidas de este nivel.", () => {
+                    setTimeout(() => {
+                        showBibleModal();
+                    }, 1200);
+                });
+            }
+        }
+
+        // CORRECCIÓN Y ADAPTACIÓN DE LECTURA NATURAL PARA LAS CITAS Y VERSÍCULOS
+        function formatVerseForSpeech(verseData) {
+            let fullText = verseData.verse + ". " + verseData.explanation;
+            
+            return fullText
+                .replace(/1\s+Pedro/gi, "Primera de Pedro")
+                .replace(/2\s+Pedro/gi, "Segunda de Pedro")
+                .replace(/1\s+Juan/gi, "Primera de Juan")
+                .replace(/1\s+Tesalonicenses/gi, "Primera de Tesalonicenses")
+                .replace(/1\s+Corintios/gi, "Primera de Corintios")
+                .replace(/(\d+):(\d+)/g, "capítulo $1, verso $2")
+                .replace(/—/g, "dice así:");
+        }
+
+        function showBibleModal() {
+            const verseData = bibleVersesDB[currentLevel % bibleVersesDB.length];
+
+            document.getElementById('bible-redil-title').innerText = `¡NIVEL ${currentLevel + 1} COMPLETADO!`;
+            document.getElementById('bible-verse').innerText = verseData.verse;
+            document.getElementById('bible-explanation').innerText = verseData.explanation;
+
+            const closeBtn = document.getElementById('close-bible-btn');
+            closeBtn.disabled = true;
+            closeBtn.className = "w-full py-3 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed";
+            closeBtn.innerHTML = `<i class="fa-solid fa-volume-high mr-1.5 animate-pulse"></i> Escuchando Reflexión...`;
+
+            document.getElementById('bible-modal').classList.remove('hidden');
+
+            const textForSpeech = formatVerseForSpeech(verseData);
+            
+            speakText(`¡Nivel ${currentLevel + 1} completado! ${textForSpeech}`, () => {
+                closeBtn.disabled = false;
+                closeBtn.className = "w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-xs shadow-lg active:scale-95 transition cursor-pointer";
+                closeBtn.innerHTML = `<i class="fa-solid fa-arrow-right mr-1.5"></i> Continuar al Siguiente Nivel`;
+            });
+        }
+
+        function closeBibleModalAndContinue() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('bible-modal').classList.add('hidden');
+
+            if (totalRescuedSheepCount >= 100 || currentLevel === 39) {
+                document.getElementById('trophy-modal').classList.remove('hidden');
+            } else {
+                if (currentLevel < 39) currentLevel++;
+                renderLevelsList();
+                loadLevel();
+            }
+        }
+
+        function hintSheep() {
+            playWinSound();
+            speakText("¡Atención explorador! Te muestro las ovejas perdidas.");
+            const pasture = document.getElementById('game-pasture');
+            if (!pasture) return;
+            const animals = pasture.getElementsByClassName('animal-btn');
+            lostSheepIndexes.forEach(idx => {
+                if (animals[idx]) {
+                    const el = animals[idx];
+                    el.style.transform = 'scale(1.6)';
+                    setTimeout(() => el.style.transform = 'scale(1)', 900);
+                }
+            });
         }
 
         let audioCtx = null;
@@ -453,39 +813,40 @@
             } catch(e) {}
         }
 
-        function playShockLightningSound() {
-            try {
-                initAudio();
-                const now = audioCtx.currentTime;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
-                gain.gain.setValueAtTime(0.35, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 0.4);
-            } catch(e) {}
-        }
-
         function playErrorSound() {
             try {
                 initAudio();
                 const now = audioCtx.currentTime;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(140, now);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
                 osc.frequency.setValueAtTime(100, now + 0.15);
                 gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
                 osc.stop(now + 0.3);
+            } catch(e) {}
+        }
+
+        function playWinSound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554, now + 0.1);
+                osc.frequency.setValueAtTime(659, now + 0.2);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.4);
             } catch(e) {}
         }
 
@@ -500,18 +861,18 @@
             window.speechSynthesis.onvoiceschanged = loadNaturalVoice;
         }
 
-        function speakText(text, onEndCallback = null) {
+        function speakText(text, callback = null) {
             if (!isAudioEnabled || !('speechSynthesis' in window)) {
-                if (onEndCallback) onEndCallback();
+                if (callback) callback();
                 return;
             }
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'es-ES';
             if (bestVoice) utterance.voice = bestVoice;
-            if (onEndCallback) {
-                utterance.onend = onEndCallback;
-                utterance.onerror = onEndCallback;
+            if (callback) {
+                utterance.onend = callback;
+                utterance.onerror = callback;
             }
             window.speechSynthesis.speak(utterance);
         }
@@ -523,272 +884,148 @@
             if (!isAudioEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
         }
 
-        function renderLevelGrid() {
-            const container = document.getElementById('levels-grid-container');
-            if (!container) return;
-            container.innerHTML = '';
+        function confirmReset() {
+            if (confirm("¿Deseas reiniciar todo tu progreso y volver al Nivel 1 con 0 ovejas rescatadas?")) {
+                resetAndPlayAgain();
+            }
+        }
+
+        function resetAndPlayAgain() {
+            try {
+                localStorage.removeItem('exploradores_40_max');
+                localStorage.removeItem('exploradores_40_completed');
+                localStorage.removeItem('exploradores_40_sheep');
+            } catch(e) {}
+            completedLevels.clear();
+            maxUnlockedLevel = 0;
+            currentLevel = 0;
+            totalRescuedSheepCount = 0;
+            updateHUD();
+            document.getElementById('trophy-modal').classList.add('hidden');
+            document.getElementById('bible-modal').classList.add('hidden');
+            renderLevelsList();
+            renderRescuedFold();
+            loadLevel();
+        }
+
+        const celebrationCanvas = document.getElementById('celebration-canvas');
+        const cCtx = celebrationCanvas ? celebrationCanvas.getContext('2d') : null;
+        let celebrationItems = [];
+        let lightningStrike = null;
+
+        function triggerTargetedLightningStrike(targetX, targetY) {
+            document.body.classList.add('flash-screen');
+            setTimeout(() => document.body.classList.remove('flash-screen'), 250);
+
+            lightningStrike = {
+                startX: window.innerWidth * 0.5,
+                startY: 0,
+                targetX: targetX,
+                targetY: targetY,
+                alpha: 1.0
+            };
+        }
+
+        function spawnCelebrationBurst(x, y) {
+            const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#eab308'];
 
             for (let i = 0; i < 40; i++) {
-                const btn = document.createElement('button');
-                let stateClass = 'locked';
-                let iconHtml = `<i class="fa-solid fa-lock text-[8px] block opacity-50"></i>`;
-
-                if (completedLevels.has(i)) {
-                    stateClass = 'completed';
-                    iconHtml = `<i class="fa-solid fa-check text-[8px] block text-emerald-200"></i>`;
-                } else if (i === currentIndex) {
-                    stateClass = 'current';
-                    iconHtml = `<i class="fa-solid fa-anchor text-[8px] block"></i>`;
-                } else if (i <= maxUnlockedLevel) {
-                    stateClass = 'unlocked bg-stone-800 text-blue-300 border-blue-500/50';
-                    iconHtml = `<i class="fa-solid fa-water text-[8px] block text-blue-400"></i>`;
-                }
-
-                btn.className = `level-btn ${stateClass} border h-9 rounded-xl flex flex-col items-center justify-center font-bold text-[11px] shadow-sm transition`;
-                btn.innerHTML = `<span>${i + 1}</span>${iconHtml}`;
-
-                if (i <= maxUnlockedLevel) {
-                    btn.onclick = () => {
-                        currentIndex = i;
-                        renderLevelGrid();
-                        renderQuestion();
-                    };
-                } else {
-                    btn.disabled = true;
-                }
-                container.appendChild(btn);
-            }
-
-            const percent = Math.round((completedLevels.size / 40) * 100);
-            document.getElementById('progress-percent').innerText = `${percent}%`;
-        }
-
-        function renderQuestion() {
-            isAnsweringBlocked = false;
-            const q = questionsDB[currentIndex];
-            const currentLevel = currentIndex + 1;
-
-            document.getElementById('level-indicator').innerText = `Nivel ${currentLevel} de 40`;
-            document.getElementById('group-indicator').innerText = `Pescadores y Evangelismo`;
-
-            const progressPercent = (completedLevels.size / 40) * 100;
-            document.getElementById('progress-bar').style.width = `${Math.max(progressPercent, 1)}%`;
-            document.getElementById('question-text').innerText = q.question;
-
-            const feedback = document.getElementById('feedback-box');
-            feedback.className = "hidden";
-
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "option-btn w-full text-left p-3 sm:p-4 rounded-xl font-semibold text-stone-200 flex items-center justify-between text-xs sm:text-sm";
-                btn.onclick = () => handleAnswer(idx, btn);
-                btn.innerHTML = `<span>${opt}</span><span class="w-6 h-6 rounded-full border border-blue-500/30 flex items-center justify-center text-xs font-bold text-sky-400 bg-black/40">${String.fromCharCode(65 + idx)}</span>`;
-                optionsContainer.appendChild(btn);
-            });
-
-            readCurrentQuestion();
-        }
-
-        function readCurrentQuestion() {
-            const q = questionsDB[currentIndex];
-            speakText(`Nivel ${currentIndex + 1}. ${q.question}. Opción A: ${q.options[0]}. Opción B: ${q.options[1]}. Opción C: ${q.options[2]}. Opción D: ${q.options[3]}`);
-        }
-
-        function handleAnswer(selectedIndex, btnElement) {
-            if (isAnsweringBlocked) return;
-
-            const q = questionsDB[currentIndex];
-            const feedback = document.getElementById('feedback-box');
-
-            if (selectedIndex === q.correct) {
-                isAnsweringBlocked = true;
-
-                // Rayos Shock directo en el botón seleccionado
-                const rect = btnElement.getBoundingClientRect();
-                triggerShockLightning(rect.left + rect.width / 2, rect.top + rect.height / 2);
-                playShockLightningSound();
-                spawnElectricSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
-
-                if (!completedLevels.has(currentIndex)) completedLevels.add(currentIndex);
-                if (currentIndex + 1 > maxUnlockedLevel && currentIndex + 1 < 40) maxUnlockedLevel = currentIndex + 1;
-
-                saveProgress();
-                updateHUDScore();
-
-                btnElement.className = "w-full text-left p-3 sm:p-4 rounded-xl font-bold text-black bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 border-2 border-yellow-200 shadow-lg flex items-center justify-between text-xs sm:text-sm";
-
-                feedback.innerHTML = `
-                    <div class="flex flex-col items-center gap-2 text-sky-200">
-                        <div class="font-black text-xs sm:text-sm uppercase tracking-wider text-yellow-300 flex items-center gap-1">
-                            <i class="fa-solid fa-bolt text-yellow-300 animate-bounce"></i> ¡RAYOS SHOCK ACTIVADOS! ¡CORRECTO! ⚡
-                        </div>
-                        <div class="text-[11px] sm:text-xs font-bold text-blue-300 italic border-t border-blue-500/30 pt-1.5 w-full"><i class="fa-solid fa-book-bible text-blue-400 mr-1"></i> ${q.verse}</div>
-                        <p class="text-[10px] sm:text-[11px] text-stone-200 font-medium italic leading-relaxed">"${q.verseText}"</p>
-                        <button id="next-level-btn" onclick="advanceToNextLevel()" disabled class="mt-2 w-full py-2.5 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed">
-                            <i class="fa-solid fa-volume-high mr-1 animate-pulse"></i> Escuchando Texto Bíblico...
-                        </button>
-                    </div>
-                `;
-                feedback.className = "block rounded-xl p-3 sm:p-4 text-center bg-blue-950/95 border-2 border-blue-500/80 shadow-2xl backdrop-blur-md mb-3";
-
-                // Narración obligatoria: no avanza hasta terminar el audio y pulsar el botón
-                speakText(`¡Rayo Shock correcto! Como dice en ${q.verse}: ${q.verseText}`, () => {
-                    const nextBtn = document.getElementById('next-level-btn');
-                    if (nextBtn) {
-                        nextBtn.disabled = false;
-                        nextBtn.className = "mt-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 text-white font-black uppercase text-xs shadow-lg active:scale-95 transition cursor-pointer";
-                        nextBtn.innerHTML = `<i class="fa-solid fa-arrow-right mr-1"></i> Continuar al Siguiente Nivel`;
-                    }
+                celebrationItems.push({
+                    type: Math.random() > 0.4 ? 'confetti' : 'ribbon',
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: -Math.random() * 10 - 2,
+                    size: 6 + Math.random() * 8,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * Math.PI,
+                    rotSpeed: (Math.random() - 0.5) * 0.2,
+                    alpha: 1.0
                 });
-
-            } else {
-                playErrorSound();
-                btnElement.className = "w-full text-left p-3 sm:p-4 rounded-xl font-semibold text-red-200 bg-red-950/70 border-2 border-red-500/80 flex items-center justify-between text-xs sm:text-sm";
-                btnElement.disabled = true;
-
-                feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-400"></i> Incorrecto. ¡Vuelve a intentarlo para desatar el Rayo Shock!`;
-                feedback.className = "block rounded-xl p-2.5 sm:p-3 text-center font-bold text-xs sm:text-sm bg-red-950/80 border border-red-500/60 text-red-200 backdrop-blur-md mb-2";
-
-                speakText("Incorrecto. Intenta con otra opción.");
-            }
-        }
-
-        function advanceToNextLevel() {
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-            if (completedLevels.size === 40) {
-                showTrophyModal();
-            } else {
-                if (currentIndex < 39) currentIndex++;
-                renderLevelGrid();
-                renderQuestion();
-            }
-        }
-
-        function showTrophyModal() {
-            document.getElementById('trophy-modal').classList.remove('hidden');
-            speakText("¡Felicidades! Has completado exitosamente la misión de Pescadores de Hombres y la gran comisión.");
-        }
-
-        // --- CANVAS DE FONDO MARINO Y RAYOS SHOCK ELÉCTRICOS ---
-        const seaCanvas = document.getElementById('sea-canvas');
-        const sCtx = seaCanvas.getContext('2d');
-        const strikeCanvas = document.getElementById('strike-lightning-canvas');
-        const stCtx = strikeCanvas.getContext('2d');
-        const particleCanvas = document.getElementById('particle-canvas');
-        const pCtx = particleCanvas.getContext('2d');
-
-        function resizeCanvases() {
-            seaCanvas.width = strikeCanvas.width = particleCanvas.width = window.innerWidth;
-            seaCanvas.height = strikeCanvas.height = particleCanvas.height = window.innerHeight;
-            drawSeaBackground();
-        }
-
-        function drawSeaBackground() {
-            const w = seaCanvas.width, h = seaCanvas.height;
-            sCtx.clearRect(0, 0, w, h);
-            const bgGrad = sCtx.createLinearGradient(0, 0, 0, h);
-            bgGrad.addColorStop(0, '#020617');
-            bgGrad.addColorStop(0.5, '#0b132b');
-            bgGrad.addColorStop(1, '#030712');
-            sCtx.fillStyle = bgGrad;
-            sCtx.fillRect(0, 0, w, h);
-
-            sCtx.fillStyle = 'rgba(56, 189, 248, 0.03)';
-            sCtx.beginPath();
-            sCtx.arc(w * 0.5, h * 0.2, w * 0.4, 0, Math.PI * 2);
-            sCtx.fill();
-        }
-
-        function triggerShockLightning(targetX, targetY) {
-            document.body.classList.add('flash-screen');
-            setTimeout(() => document.body.classList.remove('flash-screen'), 300);
-
-            const startX = targetX + (Math.random() - 0.5) * 150;
-            const startY = 0;
-            let alpha = 1.0;
-
-            function animateBolt() {
-                stCtx.clearRect(0, 0, strikeCanvas.width, strikeCanvas.height);
-                if (alpha <= 0) return;
-
-                stCtx.save();
-                stCtx.beginPath();
-                stCtx.moveTo(startX, startY);
-                
-                let currX = startX;
-                let currY = startY;
-                const steps = 8;
-                for (let i = 1; i <= steps; i++) {
-                    const progress = i / steps;
-                    currY = startY + (targetY - startY) * progress;
-                    currX = startX + (targetX - startX) * progress + (Math.random() - 0.5) * 50;
-                    stCtx.lineTo(currX, currY);
-                }
-
-                stCtx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
-                stCtx.lineWidth = 5;
-                stCtx.shadowColor = 'rgba(14, 165, 233, 1)';
-                stCtx.shadowBlur = 25;
-                stCtx.stroke();
-
-                stCtx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-                stCtx.lineWidth = 2;
-                stCtx.stroke();
-                stCtx.restore();
-
-                alpha -= 0.1;
-                requestAnimationFrame(animateBolt);
             }
 
-            animateBolt();
-        }
-
-        let particles = [];
-        function spawnElectricSparks(x, y) {
-            for (let i = 0; i < 25; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 2 + Math.random() * 6;
-                particles.push({
-                    x, y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: 4 + Math.random() * 6,
-                    color: Math.random() > 0.5 ? '#facc15' : '#38bdf8',
+            for (let i = 0; i < 10; i++) {
+                celebrationItems.push({
+                    type: 'balloon',
+                    x: x + (Math.random() - 0.5) * 80,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -Math.random() * 3 - 2,
+                    size: 18 + Math.random() * 12,
+                    color: colors[Math.floor(Math.random() * colors.length)],
                     alpha: 1.0
                 });
             }
         }
 
-        function renderParticles() {
-            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.03;
+        function renderCelebrations() {
+            if (!cCtx) return;
+            cCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-                pCtx.save();
-                pCtx.fillStyle = p.color;
-                pCtx.globalAlpha = p.alpha;
-                pCtx.shadowColor = p.color;
-                pCtx.shadowBlur = 10;
-                pCtx.beginPath();
-                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                pCtx.fill();
-                pCtx.restore();
+            if (lightningStrike && lightningStrike.alpha > 0) {
+                cCtx.save();
+                cCtx.beginPath();
+                cCtx.moveTo(lightningStrike.startX, lightningStrike.startY);
+                cCtx.lineTo(lightningStrike.targetX, lightningStrike.targetY);
+                cCtx.strokeStyle = `rgba(255, 230, 100, ${lightningStrike.alpha})`;
+                cCtx.lineWidth = 6;
+                cCtx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                cCtx.shadowBlur = 20;
+                cCtx.stroke();
+                cCtx.restore();
+                lightningStrike.alpha -= 0.08;
             }
-            requestAnimationFrame(renderParticles);
+
+            for (let i = celebrationItems.length - 1; i >= 0; i--) {
+                const item = celebrationItems[i];
+                if (item.alpha <= 0) { celebrationItems.splice(i, 1); continue; }
+
+                item.x += item.vx;
+                item.y += item.vy;
+
+                if (item.type !== 'balloon') {
+                    item.vy += 0.2;
+                    item.rotation += item.rotSpeed;
+                } else {
+                    item.vx += Math.sin(item.y * 0.05) * 0.1;
+                }
+
+                item.alpha -= 0.015;
+
+                cCtx.save();
+                cCtx.translate(item.x, item.y);
+                cCtx.fillStyle = item.color;
+                cCtx.globalAlpha = item.alpha;
+
+                if (item.type === 'confetti') {
+                    cCtx.rotate(item.rotation);
+                    cCtx.fillRect(-item.size / 2, -item.size / 2, item.size, item.size);
+                } else if (item.type === 'ribbon') {
+                    cCtx.rotate(item.rotation);
+                    cCtx.fillRect(-item.size / 4, -item.size, item.size / 2, item.size * 2);
+                } else if (item.type === 'balloon') {
+                    cCtx.beginPath();
+                    cCtx.ellipse(0, 0, item.size * 0.7, item.size, 0, 0, Math.PI * 2);
+                    cCtx.fill();
+                    cCtx.beginPath();
+                    cCtx.moveTo(0, item.size);
+                    cCtx.lineTo(0, item.size + 12);
+                    cCtx.strokeStyle = '#ffffff';
+                    cCtx.stroke();
+                }
+
+                cCtx.restore();
+            }
+
+            requestAnimationFrame(renderCelebrations);
         }
 
         window.onload = function() {
-            resizeCanvases();
-            renderParticles();
+            if (celebrationCanvas) {
+                celebrationCanvas.width = window.innerWidth;
+                celebrationCanvas.height = window.innerHeight;
+            }
+            renderCelebrations();
         };
-        window.onresize = resizeCanvases;
     </script>
 </body>
 </html>
